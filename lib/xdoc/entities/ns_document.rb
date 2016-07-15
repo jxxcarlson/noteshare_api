@@ -28,6 +28,39 @@ class NSDocument
     @links[array_name]
   end
 
+
+  ###
+  ### JSON
+  ###
+
+  def to_hash
+    hash = {}
+    hash['id'] = self.id
+    hash['short_id'] = self.short_id
+    hash['collection_id'] = self.collection_id
+
+    hash['title'] = self.title
+
+    hash['created_at'] = self.created_at.to_s
+    hash['updated_at'] = self.updated_at.to_s
+    hash['viewed_at'] = self.viewed_at.to_s
+    hash['visit_count'] = self.visit_count
+
+    hash['kind'] = self.kind
+    hash['text'] = self.text
+    hash['rendered_text'] = self.rendered_text
+
+    hash['public'] = self.public
+    hash['dict'] = self.dict
+    hash['links'] = self.links
+    hash['tags'] = self.tags
+    hash
+  end
+
+  def to_json
+    self.to_hash.to_json
+  end
+
   def update_from_json(str)
     hash = JSON.parse(str)
     self.update_from_hash(hash)
