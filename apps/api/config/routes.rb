@@ -1,3 +1,4 @@
+get '/documents/:id', to: 'documents#read'     # read document
 post '/documents/:id', to: 'documents#update'  # update document from json payload
 post '/documents', to: 'documents#create'      # create document from json payload
 
