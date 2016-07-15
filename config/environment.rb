@@ -6,6 +6,6 @@ require_relative '../apps/api/application'
 require_relative '../apps/web/application'
 
 Hanami::Container.configure do
-  mount Api::Application, at: '/api'
+  mount Api::Application, at: '/v1'
   mount Web::Application, at: '/'
 end

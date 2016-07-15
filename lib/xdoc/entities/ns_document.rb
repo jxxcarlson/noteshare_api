@@ -5,6 +5,17 @@ class NSDocument
              :created_at, :updated_at, :viewed_at, :visit_count,
              :text, :rendered_text, :public, :dict, :kind, :links, :tags
 
+  def initialize(attributes = {})
+    super
+    @text ||= ''
+    @rendered_text ||= ''
+    @public ||= false
+    @dict  ||= {}
+    @kind ||= 'text'
+    @links ||= {}
+    @tags ||= []
+  end
+
   def set_links_from_array(array_name, array)
     @links[array_name] = array
   end
@@ -19,6 +30,11 @@ class NSDocument
 
   def update_from_json(str)
     hash = JSON.parse(str)
+    self.update_from_hash(hash)
+  end
+
+  def update_from_hash(hash)
+
     self.title = hash['title'] if hash['title']
     self.short_id = hash['short_id'] if hash['short_id']
     self.owner_id = hash['owner_id'] if hash['owner_id']
@@ -35,22 +51,13 @@ class NSDocument
     self.public = hash['public'] if hash['public']
 
     self.dict = hash['dict'] if hash['dict']
-    self.links['documents'] = hash['documents'] if hash['documents']
-    self.links['resources'] = hash['resources'] if hash['resources']
+    self.links['documents'] = hash['links']['documents'] if hash['links'] && hash['links']['documents']
+    self.links['resources'] = hash['links']['resources'] if hash['links'] && hash['links']['resources']
     self.tags = hash['tags'] if hash['tags']
     DocumentRepository.update  self
   end
 
-  def initialize(attributes = {})
-    super
-    @text ||= ''
-    @rendered_text ||= ''
-    @public ||= false
-    @dict  ||= {}
-    @kind ||= 'text'
-    @links ||= {}
-    @tags ||= []
-  end
+
 
 
 end

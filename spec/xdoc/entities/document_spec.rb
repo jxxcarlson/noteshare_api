@@ -11,7 +11,7 @@ describe NSDocument do
 
   end
 
-  it 'can create and update a document' do
+  it 'can create and update a document t1' do
 
     e = DocumentRepository.first
     assert e.title == 'Test'
@@ -23,7 +23,7 @@ describe NSDocument do
 
   end
 
-  it 'can set up its links["documents"] value from an array' do
+  it 'can set up its links["documents"] value from an array t2' do
 
     doc_list = [ { 'id' => 10, 'title' => 'EM'}, { 'id' => 20, 'title' => 'Bio'}]
     @doc.set_links_from_array('documents', doc_list)
@@ -31,7 +31,7 @@ describe NSDocument do
 
   end
 
-  it 'can set up its links["documents"] value from a json string' do
+  it 'can set up its links["documents"] value from a json string t3' do
 
     doc_list = [ { 'id' => 11, 'title' => 'EMM'}, { 'id' => 22, 'title' => 'Biology'}]
     json_string = doc_list.to_json
@@ -40,7 +40,7 @@ describe NSDocument do
 
   end
 
-  it 'can update a document from a full or partial json string (1)' do
+  it 'can update a document from a full or partial json string (1) t4' do
 
     hash = { 'text' => 'This is a test'}
     json_str = hash.to_json
@@ -51,7 +51,7 @@ describe NSDocument do
 
   end
 
-  it 'can update a document from a full or partial json string (2)' do
+  it 'can update a document from a full or partial json string (2) t5' do
 
     hash = { 'short_id' => 'foo_1'}
     hash['owner_id'] = 55
@@ -67,8 +67,10 @@ describe NSDocument do
     hash['public'] = true
 
     hash['dict'] = {'favorite_flavor' => 'vanilla'}
-    hash['documents'] = [ { 'id' => 10, 'title' => 'EM'}, { 'id' => 20, 'title' => 'Bio'} ]
-    hash['resources'] = [ { 'id' => 100, 'type' => 'image'}, { 'id' => 200, 'title' => 'Bio', 'type' => 'PDF'} ]
+    document_array = [ { 'id' => 10, 'title' => 'EM'}, { 'id' => 20, 'title' => 'Bio'} ]
+    resource_array = [ { 'id' => 100, 'type' => 'image'}, { 'id' => 200, 'title' => 'Bio', 'type' => 'PDF'} ]
+    hash['links'] = { 'documents' => document_array, 'resources' => resource_array}
+
     hash['tags'] = [ 'physics', 'quantum' ]
     hash['kind'] = 'asciidoc'
 
@@ -94,8 +96,8 @@ describe NSDocument do
     assert @doc.public == true
 
     assert @doc.dict['favorite_flavor'] == 'vanilla'
-    assert @doc.links['documents'] == hash['documents']
-    assert @doc.links['resources'] == hash['resources']
+    assert @doc.links['documents'] == document_array
+    assert @doc.links['resources'] == resource_array
     assert @doc.tags == hash['tags']
     assert @doc.kind == hash['kind']
 
