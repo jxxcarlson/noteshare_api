@@ -3,7 +3,7 @@ module Api::Controllers::Documents
     include Api::Action
 
     def call(params)
-      puts "API: updating document #{params['id']}"
+      puts "API: reading document #{params['id']}"
       id = params['id']
       document = DocumentRepository.find(id)
       if document

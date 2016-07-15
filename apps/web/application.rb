@@ -200,7 +200,9 @@ module Web
       #  * http://content-security-policy.com/
       #  * https://developer.mozilla.org/en-US/docs/Web/Security/CSP/Using_Content_Security_Policy
       #
-      security.content_security_policy "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self'; font-src 'self';"
+
+      # security.content_security_policy "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self'; font-src 'self';"
+      security.content_security_policy "default-src 'none'  ; script-src 'self'  'unsafe-inline' ajax.googleapis.com; connect-src 'self' ; img-src 'self'; style-src 'self' netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css; font-src 'self' netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/ netdna.bootstrapcdn.com/font-awesome/4.0.0/fonts/ "
 
       ##
       # FRAMEWORKS
