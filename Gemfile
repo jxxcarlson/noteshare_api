@@ -8,6 +8,8 @@ gem 'hanami-model', '~> 0.5'
 
 gem 'pg'
 
+gem 'bcrypt'
+
 group :test do
   gem 'minitest'
   gem 'capybara'
