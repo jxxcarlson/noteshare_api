@@ -19,6 +19,12 @@ Sequel.migration do
 
       column :text, "text", :null=>false
       column :rendered_text, "text"
+      column :kind, "text"              # e.g., text, asciidoc, pdf, compilation
+
+      column :public, "boolean"
+      column :dict, "jsonb"
+      column :tags, "text[]"
+      column :links, "jsonb"
     end
   end
 end

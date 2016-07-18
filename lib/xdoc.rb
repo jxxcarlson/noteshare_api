@@ -60,7 +60,6 @@ Hanami::Model.configure do
       attribute :text, String
       attribute :rendered_text, String
 
-
       attribute :public, Boolean
       attribute :dict, JSON
       attribute :tags, PGStringArray
@@ -68,17 +67,31 @@ Hanami::Model.configure do
       attribute :links, JSON
       attribute :kind, String
 
+    end
+
+    collection :users do
+      entity User
+      repository UserRepository
+
+      attribute :id, Integer
+      attribute :username, String
+      attribute :admin, Boolean
+      attribute :status, String
+
+      attribute :email, String
+      attribute :password_hash, String
+
+      attribute :created_at, DateTime
+      attribute :updated_at, DateTime
+
+      attribute :dict, JSON
+      attribute :links, JSON
 
     end
 
-    # collection :users do
-    #   entity     User
-    #   repository UserRepository
-    #
-    #   attribute :id,   Integer
-    #   attribute :name, String
-    # end
   end
+
+
 end.load!
 
 Hanami::Mailer.configure do
@@ -91,3 +104,5 @@ Hanami::Mailer.configure do
     # production :stmp, address: ENV['SMTP_PORT'], port: 1025
   end
 end.load!
+
+

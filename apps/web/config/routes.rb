@@ -1,3 +1,4 @@
+get '/sessions', to: 'sessions#create'
 get '/test', to: 'test#foo'
 
 get '/foo', to: ->(env) { [200, {}, ['Welcome to Hanami::Router!']] }

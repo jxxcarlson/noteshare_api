@@ -9,6 +9,7 @@ gem 'hanami-model', '~> 0.5'
 gem 'pg'
 
 gem 'bcrypt'
+gem 'jwt'
 
 group :test do
   gem 'minitest'
