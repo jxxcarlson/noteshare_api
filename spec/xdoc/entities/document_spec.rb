@@ -77,8 +77,6 @@ describe NSDocument do
 
     json_str = hash.to_json
 
-    puts json_str
-
     @doc.update_from_json(json_str)
 
     assert @doc.short_id == hash['short_id']

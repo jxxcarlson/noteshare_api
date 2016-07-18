@@ -20,7 +20,6 @@ describe NewUser do
   it 'returns an error for a password - password confirmation mismatch: t2' do
 
     result = NewUser.new(username: 'fred', password: 'foobar', password_confirmation: 'jjjj', email: 'fred@foo.io').call
-    puts "RESULT: #{result.inspect}"
 
     assert result.err[0] == ENV['ERRCODE_PASSWORD_MISSMATCH']
 
@@ -29,7 +28,7 @@ describe NewUser do
   it 'returns an error for a password which is too short: t3' do
 
     result = NewUser.new(username: 'fred', password: 'aa', password_confirmation: 'aa', email: 'fred@foo.io').call
-    puts "RESULT: #{result.inspect}"
+
     assert result.err[0] == ENV['ERRCODE_PASSWORD_TOO_SHORT']
 
   end
@@ -37,7 +36,6 @@ describe NewUser do
   it 'accepts a valid password and confirmation, the creates the user: t4' do
 
     result = NewUser.new(username: 'fred', password: 'foobar1234', password_confirmation: 'foobar1234', email: 'fred@foo.io').call
-    # puts "RESULT: #{result.inspect}"
     assert result.err[0] == ENV['ERRCODE_OK']
     assert result.user.username == 'fred'
     assert result.user.email == 'fred@foo.io'
@@ -54,7 +52,6 @@ describe NewUser do
     user = result.user
     assert BCrypt::Password.new(user.password_hash) == 'foobar1234'
     assert user.verify_password('foobar1234') == true
-
 
   end
 

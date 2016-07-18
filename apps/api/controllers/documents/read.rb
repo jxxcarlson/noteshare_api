@@ -3,12 +3,8 @@ module Api::Controllers::Documents
     include Api::Action
 
     def call(params)
-      puts "API: reading document #{params['id']}"
       id = params['id']
       document = DocumentRepository.find(id)
-      if document
-        puts "Document #{id} found"
-      end
       if document
         hash = {'response' => '202 Accepted', 'document' => document.to_hash }
         self.body = hash.to_json

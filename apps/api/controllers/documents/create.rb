@@ -3,7 +3,6 @@ module Api::Controllers::Documents
     include Api::Action
 
     def call(params)
-      puts "API: creating document"
       document = NSDocument.new(params)
       created_document = DocumentRepository.create document
       if created_document

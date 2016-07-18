@@ -3,12 +3,9 @@ module Api::Controllers::Documents
     include Api::Action
 
     def call(params)
-      puts "API: updating document #{params['id']}"
       id = params['id']
       document = DocumentRepository.find(id)
-      if document
-        puts "Document #{id} found"
-      end
+
       if document
         document.update_from_hash(params)
         hash = {'response' => '202 Accepted', 'document' => document.to_hash }

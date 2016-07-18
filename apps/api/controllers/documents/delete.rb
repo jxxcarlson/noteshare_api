@@ -3,14 +3,8 @@ module Api::Controllers::Documents
     include Api::Action
 
     def call(params)
-      puts "API: delete document  "
-      puts "API: delete document #{params['id']}"
       id = params['id']
       document = DocumentRepository.find(id)
-
-      if document
-        puts "Document #{id} found"
-      end
 
       if document
         DocumentRepository.delete document

@@ -25,7 +25,6 @@ class NewUser
 
     @err = [ENV['ERRCODE_PASSWORD_TOO_SHORT'], "Password must be at least eight characters"] if @password.length < 8
 
-    puts "ERR: #{@err}"
     return if @err[0] != @OK
   end
 
