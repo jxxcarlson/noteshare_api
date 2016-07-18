@@ -1,9 +1,21 @@
 require 'hanami/helpers'
 require 'hanami/assets'
 
+
 module Api
   class Application < Hanami::Application
     configure do
+      # https://gitter.im/hanami/chat/archives/2016/02/12
+      # Include gem 'rack-cors', :require => 'rack/cors'
+      middleware.use Rack::Cors do
+        allow do
+          origins 'localhost:8081', '127.0.0.1:9000', '0.0.0.0:9000'
+          # origins 'localhost:8081', '127.0.0.1:9000', '0.0.0.0:9000'
+          # origins '*'
+          resource '*', headers: :any, methods: [:get, :post, :patch, :options]
+        end
+      end
+
       ##
       # BASIC
       #

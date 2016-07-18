@@ -1,3 +1,4 @@
+get '/signup', to: 'user#new'
 get '/sessions', to: 'sessions#create'
 get '/test', to: 'test#foo'
 

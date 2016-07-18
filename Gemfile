@@ -10,6 +10,7 @@ gem 'pg'
 
 gem 'bcrypt'
 gem 'jwt'
+gem 'rack-cors', :require => 'rack/cors'
 
 group :test do
   gem 'minitest'

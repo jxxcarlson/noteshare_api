@@ -21,6 +21,7 @@ class AccessToken
   def initialize(hash)
     @username = hash[:username]
     @password = hash[:password]
+    @status = 400
   end
 
 

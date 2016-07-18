@@ -9,3 +9,6 @@ Hanami::Container.configure do
   mount Api::Application, at: '/v1'
   mount Web::Application, at: '/'
 end
+
+# https://gitter.im/hanami/chat/archives/2016/02/12
+
