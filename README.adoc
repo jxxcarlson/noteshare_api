@@ -1,0 +1,3 @@
+API server version of Noteshare.
+Written in Hanami.
+Uses Asciidoctor.
