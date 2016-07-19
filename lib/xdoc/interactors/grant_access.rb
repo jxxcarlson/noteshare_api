@@ -23,7 +23,7 @@ require 'jwt'
 class GrantAccess
   include Hanami::Interactor
 
-  expose :valid, :status
+  expose :valid, :status, :username, :user_id
 
   def initialize(token)
     @token = token
@@ -40,9 +40,10 @@ class GrantAccess
     end
     @status = 200
     payload = decoded_token[0]
-    username = payload['usr']
+    @username = payload['usr']
     password = payload['pwd']
-    user = UserRepository.find_by_username(username)
+    user = UserRepository.find_by_username(@username)
+    @user_id = user.id
     @valid = (BCrypt::Password.new(user.password_hash) == password)
   end
 end
