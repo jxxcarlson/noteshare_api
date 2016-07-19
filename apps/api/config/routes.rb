@@ -1,5 +1,6 @@
 
 
+
 post '/documents', to: 'documents#create'          # create document from json payload
 get '/documents/:id', to: 'documents#read'         # read document - get json payload
 post '/documents/:id', to: 'documents#update'      # update document from json payload
@@ -7,7 +8,10 @@ delete '/documents/:id', to: 'documents#delete'    # delete document
 
 # http://restcookbook.com/Basics/loggingin/
 
-get '/users/:id', to: 'users#gettoken'              # authenticate user and return token
+# get /users/joe?foo123 = authenticate user joe with password foo123 and return token
+get '/users/:id', to: 'users#gettoken'
+# post /users= create user joe with password foo123 and return token
+post '/users/create', to: 'users#create'
 
 
 # Configure your routes here

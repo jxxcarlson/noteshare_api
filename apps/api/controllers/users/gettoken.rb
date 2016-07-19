@@ -7,12 +7,8 @@ module Api::Controllers::Users
 
 
     def call(params)
-      puts "ID: #{params[:id]}"
-      puts "QUERY STRING: #{request.query_string}"
       result = AccessToken.new(username: params[:id], password: request.query_string).call
-
-      # self.body = "Status: #{result.status}, ID: #{params[:id]}, QUERY STRING: #{request.query_string}"
-      self.body = "Status: #{result.status}, token: #{result.token}"
+      self.body = {:status => result.status, :token => result.token }.to_json
     end
   end
 end

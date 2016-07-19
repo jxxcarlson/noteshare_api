@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-require_relative '../../../lib/xdoc/interactors/new_user'
+require_relative '../../../lib/xdoc/interactors/create_user'
 
-describe NewUser do
+describe CreateUser do
 
   before do
 

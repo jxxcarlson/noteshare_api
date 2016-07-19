@@ -8,8 +8,8 @@ describe AccessToken do
   before do
 
     UserRepository.clear
-    NewUser.new(username: 'fred', password: 'foobar1234',
-                         password_confirmation: 'foobar1234', email: 'fred@foo.io').call
+    CreateUser.new(username: 'fred', password: 'foobar1234',
+                   password_confirmation: 'foobar1234', email: 'fred@foo.io').call
   end
 
   it 'returns an error if the user is not found: t1' do
@@ -23,6 +23,7 @@ describe AccessToken do
 
     result = AccessToken.new(username: 'fred', password: 'foobar1111').call
     assert result.err[0] == ENV['ERRCODE_INVALID_PASSWORD']
+    assert result.status == 401
 
   end
 
@@ -34,6 +35,7 @@ describe AccessToken do
     puts "Encoded token: #{result.token}"
     puts "Decoded token: #{decoded_token}"
     assert decoded_token[1]['typ'] = 'JWT'
+    assert result.status == 200
 
   end
 

@@ -11,7 +11,19 @@ require 'jwt'
 # @status and @response_body for a JSON reply
 # to a request for access
 #
-# Reference: https://github.com/jwt/ruby-jwt
+# Reference:
+#
+#   https://github.com/jwt/ruby-jwt
+#   http://restcookbook.com/Basics/loggingin/
+#
+# The access token carries an encrypted
+# version of
+#
+#    payload = { :username => @username, :password => password }
+#
+# Thus, when the system reeeives a token, it can decrypt the payload
+# and verify that the password is valid for the given user, at which
+# point access can be granted. See the interactor GrantAccess
 #
 class AccessToken
   include Hanami::Interactor
@@ -21,7 +33,7 @@ class AccessToken
   def initialize(hash)
     @username = hash[:username]
     @password = hash[:password]
-    @status = 400
+    @status = 401
   end
 
 
@@ -34,7 +46,7 @@ class AccessToken
     return if @err
 
     # options = { iss: 'http://hanamirb.org/', exp: 804700, user_id: @user.id, audience: 'github' }
-    payload = { :data => 'test' }
+    payload = { :usr => @username, :pwd => @password }
     hmac_secret = ENV['HMAC_SECRET']
     algorithm = 'HS256'
     @token = JWT.encode(payload, hmac_secret, algorithm)
