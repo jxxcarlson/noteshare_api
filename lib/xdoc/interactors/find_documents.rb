@@ -19,7 +19,7 @@ class FindDocuments
   end
 
   def document_hash(document)
-    { :id => document.id, :title => document.title, :url => "http://#{ENV['HOST']}/documents/#{document.id}"}
+    { :id => document.id, :title => document.title, :url => "/documents/#{document.id}"}
   end
 
   def call
