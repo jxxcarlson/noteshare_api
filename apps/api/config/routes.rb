@@ -1,8 +1,10 @@
 
 
 
+
 ### DOCUMENTS
 ###
+get '/documents', to: 'documents#find'             # find documents, return array of hashes
 post '/documents', to: 'documents#create'          # create document from json payload
 get '/documents/:id', to: 'documents#read'         # read document - get json payload
 post '/documents/:id', to: 'documents#update'      # update document from json payload
