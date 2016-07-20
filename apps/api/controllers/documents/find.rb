@@ -1,10 +1,14 @@
+
+require_relative '../../../../lib/xdoc/interactors/find_documents'
+
 module Api::Controllers::Documents
   class Find
     include Api::Action
 
     def call(params)
 
-      self.body = "query string: #{request.query_string}"
+      result = FindDocuments.new(request.query_string).call
+      self.body = { :status => 200, :documents => result.document_hash_array }.to_json
 
     end
 
