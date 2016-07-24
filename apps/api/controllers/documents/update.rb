@@ -16,6 +16,7 @@ module Api::Controllers::Documents
       if document
         document.update_from_hash(params)
         document.rendered_text = ::RenderAsciidoc.new(source_text: document.text).call.rendered_text
+        # document.rendered_text = document.rendered_text.gsub('href', 'ng-href')
         DocumentRepository.update document
         hash = {'status' => '202', 'document' => document.to_hash }
         self.body = hash.to_json
