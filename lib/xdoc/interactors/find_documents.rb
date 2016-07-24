@@ -7,7 +7,7 @@ require 'hanami/interactor'
 class FindDocuments
   include Hanami::Interactor
 
-  expose :documents, :document_hash_array
+  expose :documents, :document_count, :document_hash_array
 
   def initialize(query_string)
     @query_string = query_string
@@ -29,6 +29,7 @@ class FindDocuments
       else
         all_documents
     end
+    @document_count = @documents.count
     @document_hash_array = @documents.map { |document| document_hash(document) }
   end
 end
