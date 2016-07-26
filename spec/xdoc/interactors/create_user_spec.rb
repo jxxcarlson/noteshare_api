@@ -11,23 +11,16 @@ describe CreateUser do
 
   it 'can return username, email: t1' do
 
-    result = CreateUser.new(username: 'fred', password: 'foobar', password_confirmation: 'jjjj', email: 'fred@foo.io').call
+    result = CreateUser.new(username: 'fred', password: 'foobar', email: 'fred@foo.io').call
     assert result.username == 'fred'
     assert result.email == 'fred@foo.io'
 
   end
 
-  it 'returns an error for a password - password confirmation mismatch: t2' do
-
-    result = CreateUser.new(username: 'fred', password: 'foobar', password_confirmation: 'jjjj', email: 'fred@foo.io').call
-
-    assert result.err[0] == ENV['ERRCODE_PASSWORD_MISSMATCH']
-
-  end
 
   it 'returns an error for a password which is too short: t3' do
 
-    result = CreateUser.new(username: 'fred', password: 'aa', password_confirmation: 'aa', email: 'fred@foo.io').call
+    result = CreateUser.new(username: 'fred', password: 'aa',  email: 'fred@foo.io').call
 
     assert result.err[0] == ENV['ERRCODE_PASSWORD_TOO_SHORT']
 
@@ -42,14 +35,14 @@ describe CreateUser do
 
   it 'returns an error if email is not in proper formt: t5' do
 
-    result = CreateUser.new(username: 'fred', password: 'abcd1234', password_confirmation: 'abcd1234', email: 'fred.io').call
+    result = CreateUser.new(username: 'fred', password: 'abcd1234', email: 'fred.io').call
     assert result.err[0] == ENV['ERRCODE_EMAIL_INVALID']
 
   end
 
   it 'accepts a valid password and confirmation, the creates the user: t6' do
 
-    result = CreateUser.new(username: 'fred', password: 'foobar1234', password_confirmation: 'foobar1234', email: 'fred@foo.io').call
+    result = CreateUser.new(username: 'fred', password: 'foobar1234', email: 'fred@foo.io').call
     assert result.err.must_be_nil
     assert result.user.username == 'fred'
     assert result.user.email == 'fred@foo.io'
@@ -62,7 +55,7 @@ describe CreateUser do
 
   it 'password works: t5' do
 
-    result = CreateUser.new(username: 'fred', password: 'foobar1234', password_confirmation: 'foobar1234', email: 'fred@foo.io').call
+    result = CreateUser.new(username: 'fred', password: 'foobar1234',  email: 'fred@foo.io').call
     user = result.user
     assert BCrypt::Password.new(user.password_hash) == 'foobar1234'
     assert user.verify_password('foobar1234') == true

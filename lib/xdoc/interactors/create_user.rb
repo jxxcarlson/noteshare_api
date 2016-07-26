@@ -12,7 +12,6 @@ class CreateUser
   def initialize(hash)
     @username = hash[:username]
     @password = hash[:password]
-    @password_confirmation = hash[:password_confirmation]
     @email = hash[:email]
     # @err = [ENV['ERRCODE_OK', 'OK']]
     @err = nil
@@ -21,12 +20,6 @@ class CreateUser
 
 
   def verify_password
-    if @password != @password_confirmation
-      @err = [ENV['ERRCODE_PASSWORD_MISSMATCH'], "Passwords don't match"]
-      @status = 400
-      return
-    end
-
     if @password.length < 8
       @err = [ENV['ERRCODE_PASSWORD_TOO_SHORT'], "Password must be at least eight characters"]
       @status = 400
