@@ -5,17 +5,16 @@ module Api::Controllers::Documents
     include Api::Action
 
     def call(params)
-      token = params['token']
-      puts "TOKEN: #{token}"
-      text = params['text']
-      puts "TEXT: #{text}"
 
       id = params['id']
       document = DocumentRepository.find(id)
 
       if document
         document.update_from_hash(params)
-        document.rendered_text = ::RenderAsciidoc.new(source_text: document.text).call.rendered_text
+        result = ::RenderAsciidoc.new(source_text: document.text).call
+        document.rendered_text = result.rendered_text
+        puts "document.links: #{document.links}"
+        document.links['images'] = result.image_map
         # document.rendered_text = document.rendered_text.gsub('href', 'ng-href')
         DocumentRepository.update document
         hash = {'status' => '202', 'document' => document.to_hash }

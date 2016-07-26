@@ -7,7 +7,7 @@ class RenderAsciidoc
   include Hanami::Interactor
   include Asciidoctor
 
-  expose :rendered_text
+  expose :rendered_text, :image_map
 
   def initialize(hash)
     @source_text = hash[:source_text] || hash['source_text']
@@ -29,11 +29,13 @@ class RenderAsciidoc
   end
 
   def process_images
+    @image_map = { }
     scanner = @source_text.scan /image::([0-9]*?)\[(.*?)\]/
     scanner.each do |item|
       id, label = item
       old_ref = "image::#{id}[#{label}]"
       image = ImageRepository.find id
+      @image_map[id] = {'url': image.url, 'name': image.name}
       new_ref = "image::#{image.url}[#{label}]"
       @source_text = @source_text.sub(old_ref, new_ref)
     end
