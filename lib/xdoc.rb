@@ -69,6 +69,27 @@ Hanami::Model.configure do
 
     end
 
+    collection :images do
+      entity Image
+      repository ImageRepository
+
+      attribute :id, Integer
+      attribute :title, String
+
+      attribute :owner_id, Integer
+
+      attribute :created_at, DateTime
+      attribute :updated_at, DateTime
+
+      attribute :url, String
+      attribute :source, String
+      attribute :public, Boolean
+
+      attribute :dict, JSON
+      attribute :tags, PGStringArray
+
+    end
+
     collection :users do
       entity User
       repository UserRepository

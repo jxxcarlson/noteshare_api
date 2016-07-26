@@ -1,3 +1,4 @@
+get '/images/:id', to: 'images#get'
 
 
 
