@@ -1,3 +1,7 @@
+
+### IMAGES
+###
+get '/images', to: 'images#find'
 get '/images/:id', to: 'images#get'
 
 

@@ -35,7 +35,7 @@ class RenderAsciidoc
       id, label = item
       old_ref = "image::#{id}[#{label}]"
       image = ImageRepository.find id
-      @image_map[id] = {'url': image.url, 'name': image.name}
+      @image_map[id] = {'url': image.url, 'title': image.title}
       new_ref = "image::#{image.url}[#{label}]"
       @source_text = @source_text.sub(old_ref, new_ref)
     end
@@ -57,7 +57,7 @@ class RenderAsciidoc
   def preprocess
     add_attributes
     process_xrefs
-    # process_images
+    process_images
     # process_includes
   end
 
