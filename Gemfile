@@ -9,6 +9,7 @@ gem 'pg'
 
 gem 'bcrypt'
 gem 'jwt'
+gem 'aws-sdk'
 gem 'rack-cors', :require => 'rack/cors'
 
 gem 'asciidoctor-latex'

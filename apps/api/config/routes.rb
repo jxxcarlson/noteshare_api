@@ -1,3 +1,4 @@
+post '/presigned', to: 'upload#psurl'
 
 ### IMAGES
 ###

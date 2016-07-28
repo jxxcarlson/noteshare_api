@@ -16,12 +16,12 @@ class FindDocuments
 
   def query_to_hash(query)
     elements = query.split('&')
-    hash = {}
+    @search_hash = {}
     elements.each do |element|
       key, value = element.split('=')
-      hash[key] = value
+      @search_hash[key] = value
     end
-    hash
+    puts "Search hash: #{@search_hash}"
   end
 
   def all_documents
@@ -41,10 +41,8 @@ class FindDocuments
     { :id => document.id, :title => document.title, :url => "/documents/#{document.id}"}
   end
 
-  def call
-    puts "QUERY STRING: #{@query_string}"
-    terms = query_to_hash @query_string
-    scope_terms = terms['scope'].split('.')
+  def search_by_scope
+    scope_terms = @search_hash['scope'].split('.')
     scope = scope_terms[0]
     puts "Scope terms: #{scope_terms}"
     case scope
@@ -59,8 +57,25 @@ class FindDocuments
       else
         all_documents
     end
-    @document_count = @documents.count
-    @document_hash_array = @documents.map { |document| document_hash(document) }
+  end
+
+  def call
+    puts "QUERY STRING: #{@query_string}"
+    query_to_hash @query_string
+    if @search_hash['scope']
+      search_by_scope
+    end
+    if @search_hash['title']
+      puts "Searching for title = #{@search_hash['title']}"
+      DocumentRepository.fuzzy_find_by_title @search_hash['title']
+    end
+    if @documents
+      @document_count = @documents.count
+      @document_hash_array = @documents.map { |document| document_hash(document) }
+    else
+      @document_hash_array = []
+    end
+
   end
 end
 

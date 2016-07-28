@@ -1,5 +1,13 @@
+require 'sequel'
+require_relative '../../../lib/xdoc/modules/db_connection'
+
 class DocumentRepository
   include Hanami::Repository
+  include DBConnection
+
+  def self.db
+    Sequel.connect(ENV['XDOC_DATABASE_URL'])
+  end
 
   def self.find_public
     query do
@@ -11,6 +19,22 @@ class DocumentRepository
     query do
       where(owner_id: owner_id)
     end
+  end
+
+  def self.fuzzy_find_by_title2(title)
+    # query do
+    #  where(title: title)
+    # end
+    puts "db: #{self.db[:documents].inspect}"
+    docs = self.db[:documents]
+    filtered_docs = docs.grep(Sequel.function(:lower, :title), "%#{title}%")
+    puts "In fuzzy_find_by_title, docs = #{docs.all.count}"
+    puts "In fuzzy_find_by_title, filtered_docs = #{filtered_docs.all.count}"
+    # docs.map{ |item| DocumentRepository.find item[:id]}
+  end
+
+  def self.fuzzy_find_by_title(title)
+    self.db[:documents].grep(Sequel.function(:lower, :title), "%#{title}%").map{ |item| DocumentRepository.find item[:id]}
   end
 
 end
