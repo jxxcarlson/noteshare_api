@@ -2,7 +2,25 @@ require 'hanami/interactor'
 
 
 # The FindDocument interactor authenticates
-
+#
+# Search language -- query elements
+#
+# scope=all
+# scope=public
+# scope=user.baz # return records for user baz
+#
+# title=mech   # Return 'Quantum Mechanics' and 'mechanical toys'
+#
+# To do
+# #####
+#
+# Query elements should be composable without regard to order, e.g.
+#
+# scope=public&title=mech&tag=atom&title=electro
+#
+# In this example, the public records with tag=atom
+# and title containing both 'mech' and 'electro', with
+# the search being case insensitive
 #
 class FindDocuments
   include Hanami::Interactor
@@ -53,6 +71,7 @@ class FindDocuments
         puts "Searching for public documents ..."
         public_documents
       when 'user'
+        puts ""
         user_documents(scope_terms[1])
       else
         all_documents
@@ -60,14 +79,12 @@ class FindDocuments
   end
 
   def call
-    puts "QUERY STRING: #{@query_string}"
     query_to_hash @query_string
     if @search_hash['scope']
       search_by_scope
     end
     if @search_hash['title']
-      puts "Searching for title = #{@search_hash['title']}"
-      DocumentRepository.fuzzy_find_by_title @search_hash['title']
+      @documents = DocumentRepository.fuzzy_find_by_title @search_hash['title']
     end
     if @documents
       @document_count = @documents.count
