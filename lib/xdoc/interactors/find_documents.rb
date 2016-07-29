@@ -65,14 +65,16 @@ class FindDocuments
     puts "Scope terms: #{scope_terms}"
     case scope
       when 'all'
-        puts "Searching for all documents ..."
         all_documents
       when 'public'
-        puts "Searching for public documents ..."
         public_documents
       when 'user'
-        puts ""
-        user_documents(scope_terms[1])
+        if @search_hash['title']
+          user = UserRepository.find_by_username(scope_terms[1])
+          @documents = DocumentRepository.find_by_owner_and_fuzzy_title(user.id, @search_hash['title'])
+        else
+          user_documents(scope_terms[1])
+        end
       else
         all_documents
     end
@@ -82,9 +84,8 @@ class FindDocuments
     query_to_hash @query_string
     if @search_hash['scope']
       search_by_scope
-    end
-    if @search_hash['title']
-      @documents = DocumentRepository.fuzzy_find_by_title @search_hash['title']
+    elsif @search_hash['title']
+      @documents = DocumentRepository.fuzzy_find_by_title(@search_hash['title'])
     end
     if @documents
       @document_count = @documents.count

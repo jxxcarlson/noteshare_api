@@ -37,4 +37,11 @@ class DocumentRepository
     self.db[:documents].grep(Sequel.function(:lower, :title), "%#{title}%").map{ |item| DocumentRepository.find item[:id]}
   end
 
+  def self.find_by_owner_and_fuzzy_title(owner_id, title)
+    puts "IN find_by_owner_and_fuzzy_title, owner_id = #{owner_id}, title = #{title}"
+    hits = self.db[:documents].grep(Sequel.function(:lower, :title), "%#{title}%").where(owner_id: owner_id)
+    puts "#{hits.count} items found"
+    hits.map{ |item| DocumentRepository.find item[:id]}
+  end
+
 end
