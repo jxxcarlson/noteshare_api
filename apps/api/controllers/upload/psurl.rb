@@ -42,15 +42,19 @@ module Api::Controllers::Upload
 
         s3 = Aws::S3::Resource.new(
             credentials: Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY']),
-            region: 'us-standard',
+            region: 'us-east-1',
             endpoint: 'https://s3.amazonaws.com'
         )
 
+        # http://docs.aws.amazon.com/sdkforruby/api/Aws/S3/Presigner.html 
         obj = s3.bucket(bucket).object(params[:filename])
         # url = URI.parse(obj.presigned_url(:put))
-        url = URI.parse(obj.presigned_url(:put, :content_type => params[:type], :expires => 10*60))
+        # url = URI.parse(obj.presigned_url(:put, :content_type => params[:type], :expires => 10*60))
+        psu = obj.presigned_url(:put, :content_type => params[:type], :expires => 10*60)
+        url = URI.parse(psu)
         puts "================================"
-        puts "url: #{url.to_s}"
+        puts "psu: #{psu}"
+        # puts "url: #{url.to_s}"
         puts "================================"
         {:url => url.to_s}.to_json
       else
