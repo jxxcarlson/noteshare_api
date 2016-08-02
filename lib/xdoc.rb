@@ -82,6 +82,7 @@ Hanami::Model.configure do
       attribute :updated_at, DateTime
 
       attribute :url, String
+      attribute :content_type, String
       attribute :source, String
       attribute :public, Boolean
 

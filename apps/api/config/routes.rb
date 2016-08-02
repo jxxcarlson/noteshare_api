@@ -1,7 +1,11 @@
+
+
+### UPLOAD
 post '/presigned', to: 'upload#psurl'
 
 ### IMAGES
 ###
+post '/images', to: 'images#create'
 get '/images', to: 'images#find'
 get '/images/:id', to: 'images#get'
 

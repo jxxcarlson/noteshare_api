@@ -61,18 +61,16 @@ module Api::Controllers::Upload
         # https://github.com/aws/aws-sdk-js/issues/457
         obj = s3.bucket(bucket).object(params[:filename])
 
-        #FAIL:
-        # psu = obj.presigned_url(:put, :acl => 'public-read', :content_type => params[:type])
-        #SUCCEED:
-        psu = obj.presigned_url(:put, :acl => 'public-read')
-        puts "PSU: #psu"
+        psu = obj.presigned_url(:put, :acl => 'public-read',
+                                :metadata => {
+                                    'content_type' => params[:type],
+                                    'filename' => params[:filename]
+                                })
         url = URI.parse(psu)
         puts "================================"
         puts "CONTENT TYPE: #{params[:type]}"
-        puts "psu: #{psu}"
         puts "url: #{url}"
         puts "================================"
-        # {:url => url.to_s}.to_json
         {:url => url}.to_json
       else
         {:error => 'Invalid Params'}.to_json
