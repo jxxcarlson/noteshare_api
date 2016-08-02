@@ -43,14 +43,17 @@ class FindDocuments
   end
 
   def all_documents
+    puts "Getting all documents ..."
     @documents = DocumentRepository.all
   end
 
   def public_documents
+    puts "Getting public documents ..."
     @documents = DocumentRepository.find_public
   end
 
   def user_documents(username)
+    puts "Getting user documents (1) ..."
     user = UserRepository.find_by_username(username)
     @documents = DocumentRepository.find_by_owner(user.id)
   end
@@ -73,6 +76,7 @@ class FindDocuments
           user = UserRepository.find_by_username(scope_terms[1])
           @documents = DocumentRepository.find_by_owner_and_fuzzy_title(user.id, @search_hash['title'])
         else
+          puts "Getting user documents (2) ..."
           user_documents(scope_terms[1])
         end
       else

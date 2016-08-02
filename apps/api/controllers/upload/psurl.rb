@@ -35,6 +35,16 @@ module Api::Controllers::Upload
   class Psurl
     include Api::Action
 
+    #   http://docs.aws.amazon.com/general/latest/gr/signature-v4-examples.html#signature-v4-examples-ruby
+    def getSignatureKey key, dateStamp, regionName, serviceName
+      kDate    = OpenSSL::HMAC.digest('sha256', "AWS4" + key, dateStamp)
+      kRegion  = OpenSSL::HMAC.digest('sha256', kDate, regionName)
+      kService = OpenSSL::HMAC.digest('sha256', kRegion, serviceName)
+      kSigning = OpenSSL::HMAC.digest('sha256', kService, "aws4_request")
+
+      kSigning
+    end
+
     def presigned(params)
       if params[:filename] && params[:type]
 
@@ -46,17 +56,24 @@ module Api::Controllers::Upload
             endpoint: 'https://s3.amazonaws.com'
         )
 
-        # http://docs.aws.amazon.com/sdkforruby/api/Aws/S3/Presigner.html 
+        # http://docs.aws.amazon.com/sdkforruby/api/Aws/S3/Presigner.html
+        # http://docs.aws.amazon.com/AmazonS3/latest/dev/UploadObjectPreSignedURLRubySDK.html
+        # https://github.com/aws/aws-sdk-js/issues/457
         obj = s3.bucket(bucket).object(params[:filename])
-        # url = URI.parse(obj.presigned_url(:put))
-        # url = URI.parse(obj.presigned_url(:put, :content_type => params[:type], :expires => 10*60))
-        psu = obj.presigned_url(:put, :content_type => params[:type], :expires => 10*60)
+
+        #FAIL:
+        # psu = obj.presigned_url(:put, :acl => 'public-read', :content_type => params[:type])
+        #SUCCEED:
+        psu = obj.presigned_url(:put, :acl => 'public-read')
+        puts "PSU: #psu"
         url = URI.parse(psu)
         puts "================================"
+        puts "CONTENT TYPE: #{params[:type]}"
         puts "psu: #{psu}"
-        # puts "url: #{url.to_s}"
+        puts "url: #{url}"
         puts "================================"
-        {:url => url.to_s}.to_json
+        # {:url => url.to_s}.to_json
+        {:url => url}.to_json
       else
         {:error => 'Invalid Params'}.to_json
       end
