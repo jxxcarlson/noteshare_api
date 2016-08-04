@@ -59,7 +59,7 @@ class FindDocuments
   end
 
   def document_hash(document)
-    { :id => document.id, :title => document.title, :url => "/documents/#{document.id}"}
+    { :id => document.id, :title => document.title, :url => "/documents/#{document.id}", :public => document.public}
   end
 
   def search_by_scope

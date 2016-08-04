@@ -81,7 +81,9 @@ class NSDocument
     self.text = hash['text'] if hash['text']
     self.rendered_text = hash['rendered_text'] if hash['rendered_text']
 
-    self.public = hash['public'] if hash['public']
+    self.public = hash['public'] if hash['public'] != nil
+    puts "hash['public'] = #{hash['public']}"
+    puts "self.public = #{self.public}"
 
     self.dict = hash['dict'] if hash['dict']
     self.links['documents'] = hash['links']['documents'] if hash['links'] && hash['links']['documents']
