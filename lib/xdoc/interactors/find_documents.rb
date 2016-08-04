@@ -27,19 +27,22 @@ class FindDocuments
 
   expose :documents, :document_count, :document_hash_array
 
-  def initialize(query_string)
+  def initialize(query_string, conditions)
     @query_string = query_string
+    @conditions = conditions
     @status = 400
   end
 
   def query_to_hash(query)
+    query ||= ''
     elements = query.split('&')
-    @search_hash = {}
+    hash = {}
     elements.each do |element|
       key, value = element.split('=')
-      @search_hash[key] = value
+      hash[key] = value
     end
-    puts "Search hash: #{@search_hash}"
+    puts "hash: #{hash}"
+    hash
   end
 
   def all_documents
@@ -53,7 +56,7 @@ class FindDocuments
   end
 
   def user_documents(username)
-    puts "Getting user documents (1) ..."
+    puts "Getting user documents ..."
     user = UserRepository.find_by_username(username)
     @documents = DocumentRepository.find_by_owner(user.id)
   end
@@ -76,7 +79,6 @@ class FindDocuments
           user = UserRepository.find_by_username(scope_terms[1])
           @documents = DocumentRepository.find_by_owner_and_fuzzy_title(user.id, @search_hash['title'])
         else
-          puts "Getting user documents (2) ..."
           user_documents(scope_terms[1])
         end
       else
@@ -85,7 +87,8 @@ class FindDocuments
   end
 
   def call
-    query_to_hash @query_string
+    @search_hash = query_to_hash @query_string
+    @conditions_hash = query_to_hash @conditions
     if @search_hash['scope']
       search_by_scope
     elsif @search_hash['title']
@@ -96,6 +99,14 @@ class FindDocuments
       @document_hash_array = @documents.map { |document| document_hash(document) }
     else
       @document_hash_array = []
+    end
+
+    case @conditions_hash['filter']
+      when 'public'
+          puts "Filtering for public documents"
+          @document_hash_array = @document_hash_array.select{ |item| item[:public] }
+      else
+        puts "No filtering"
     end
 
   end
