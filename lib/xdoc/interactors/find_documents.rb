@@ -45,6 +45,65 @@ class FindDocuments
     hash
   end
 
+  def query_to_hash_array(query)
+    query ||= ''
+    elements = query.split('&')
+    array = []
+    elements.each do |element|
+      key, value = element.split('=')
+      hash = { key => value}
+      array.push(hash)
+    end
+    puts "array: #{array}"
+    array
+  end
+
+  def user_filter(owner_id)
+    lambda{ |dochash| dochash['owner_id'] == owner_id }
+  end
+
+  def user_or_public_filter(owner_id)
+    lambda{ |dochash| dochash['public'] || (dochash['owner_id'] == owner_id) }
+  end
+
+  def public_filter
+    lambda{ |dochash| dochash[:public]  == true }
+  end
+
+  def filters
+    { 'public': public_filter}
+  end
+
+  def prepare_filters(hash)
+    hash.select{ |h| h.keys[0] == 'filter'}.map{|h| h['filter']}.map{ |item| item.split('.')}
+  end
+
+  def apply_filter(filter, hash_array)
+    puts "BEFORE: applying filter #{filter} to hash_array (#{hash_array.count})"
+    case filter[0]
+      when 'public'
+        hash_array = hash_array.select(&public_filter)
+      when 'user'
+        username = filter[1]
+        user = UserRepository.find_by_username username
+        hash_array = hash_array.select(&user_filter(user.id))
+      when 'user_or_public'
+        username = filter[1]
+        user = UserRepository.find_by_username username
+        hash_array = hash_array.select(&user_or_public_filter(user.id))
+    end
+    puts "AFTER: applying filter #{filter} to hash_array (#{hash_array.count})"
+    hash_array
+  end
+
+  def execute_filters(filter_array, hash_array)
+    filter_array.each do |filter|
+      hash_array = apply_filter(filter, hash_array)
+    end
+    hash_array
+  end
+
+
   def all_documents
     puts "Getting all documents ..."
     @documents = DocumentRepository.all
@@ -62,7 +121,8 @@ class FindDocuments
   end
 
   def document_hash(document)
-    { :id => document.id, :title => document.title, :url => "/documents/#{document.id}", :public => document.public}
+    { :id => document.id, :title => document.title, :url => "/documents/#{document.id}",
+      :public => document.public, owner_id: document.owner_id }
   end
 
   def search_by_scope
@@ -88,7 +148,7 @@ class FindDocuments
 
   def call
     @search_hash = query_to_hash @query_string
-    @conditions_hash = query_to_hash @conditions
+    @conditions_hash_array = query_to_hash_array @conditions
     if @search_hash['scope']
       search_by_scope
     elsif @search_hash['title']
@@ -98,16 +158,18 @@ class FindDocuments
       @document_count = @documents.count
       @document_hash_array = @documents.map { |document| document_hash(document) }
     else
+      @document_count = 0
       @document_hash_array = []
     end
 
-    case @conditions_hash['filter']
-      when 'public'
-          puts "Filtering for public documents"
-          @document_hash_array = @document_hash_array.select{ |item| item[:public] }
-      else
-        puts "No filtering"
-    end
+
+    filter_array = prepare_filters @conditions_hash_array
+    @document_hash_array = execute_filters filter_array, @document_hash_array
+
+    id_array = @document_hash_array.map{ |item| item[:id]}
+    puts "id_array: #{id_array}"
+    @documents = @documents.select{ |doc|  id_array.include? doc.id}
+
 
   end
 end
