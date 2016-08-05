@@ -15,6 +15,12 @@ class DocumentRepository
     end
   end
 
+  def self.find_public_by_owner(owner_id)
+    query do
+      where(owner_id: owner_id, public: true)
+    end
+  end
+
   def self.find_by_owner(owner_id)
     query do
       where(owner_id: owner_id)

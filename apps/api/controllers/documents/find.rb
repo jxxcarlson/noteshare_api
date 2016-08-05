@@ -7,8 +7,7 @@ module Api::Controllers::Documents
 
     def call(params)
       puts "Search controller: #{request.query_string}"
-      query, conditions = request.query_string.split('?')
-      result = FindDocuments.new(query, conditions).call
+      result = FindDocuments.new(request.query_string).call
       self.body = { :status => 200, :document_count => result.document_count, :documents => result.document_hash_array }.to_json
 
     end
