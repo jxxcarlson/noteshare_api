@@ -193,6 +193,11 @@ class FindDocuments
     search(query)
     filter_hash_array
     filter_documents
+    if @documents == []
+      default_document = DocumentRepository.find(ENV['DEFAULT_DOCUMENT_ID'])
+      @documents = [default_document]
+      @document_hash_array = @documents.map { |document| document_hash(document) }
+    end
     @document_count = @documents.count
   end
 end
