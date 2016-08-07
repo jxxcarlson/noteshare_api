@@ -1,8 +1,10 @@
 require_relative '../../../../lib/xdoc/interactors/render_asciidoc'
+require_relative '../../../../lib/xdoc/modules/verify'
 
 module Api::Controllers::Documents
   class Update
     include Api::Action
+    include Permission
 
     def update_document(params)
       id = params['id']
@@ -10,10 +12,10 @@ module Api::Controllers::Documents
 
       if document
         document.update_from_hash(params)
-        result = ::RenderAsciidoc.new(source_text: document.text).call
-        document.rendered_text = result.rendered_text
+        @result = ::RenderAsciidoc.new(source_text: document.text).call
+        document.rendered_text = @result.rendered_text
         puts "document.links: #{document.links}"
-        document.links['images'] = result.image_map
+        document.links['images'] = @result.image_map
         # document.rendered_text = document.rendered_text.gsub('href', 'ng-href')
         DocumentRepository.update document
         hash = {'status' => '202', 'document' => document.to_hash }
@@ -23,17 +25,11 @@ module Api::Controllers::Documents
       end
     end
 
-    def deny_access
-      error_message = { "error" => "401 Access denied", "status" => 401 }.to_json
-      self.body = error_message
-    end
-
     def call(params)
-      token = params['token']
-      puts "TOKEN: #{token}"
-      result = GrantAccess.new(token).call
 
-      if result.valid
+     verify(params)
+
+      if @result.valid
         update_document(params)
       else
         deny_access

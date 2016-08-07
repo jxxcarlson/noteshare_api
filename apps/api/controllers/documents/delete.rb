@@ -1,8 +1,13 @@
+
+require_relative '../../../../lib/xdoc/modules/verify'
+
 module Api::Controllers::Documents
   class Delete
     include Api::Action
 
-    def call(params)
+    include Permission
+
+    def delete_document(params)
       id = params['id']
       document = DocumentRepository.find(id)
 
@@ -11,6 +16,17 @@ module Api::Controllers::Documents
         self.body = "{ 'response' => '200 success: document{#id} deleted'"
       else
         self.body = '{ "response" => "500 Server error: document not found or processed" }'
+      end
+    end
+
+    def call(params)
+
+      verify(params)
+
+      if @result.valid
+        delete_document(params)
+      else
+        deny_access
       end
 
     end
