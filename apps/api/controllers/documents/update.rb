@@ -4,8 +4,7 @@ module Api::Controllers::Documents
   class Update
     include Api::Action
 
-    def call(params)
-
+    def update_document(params)
       id = params['id']
       document = DocumentRepository.find(id)
 
@@ -21,6 +20,23 @@ module Api::Controllers::Documents
         self.body = hash.to_json
       else
         self.body = '{ "response" => "500 Server error: document not updated" }'
+      end
+    end
+
+    def deny_access
+      error_message = { "error" => "401 Access denied", "status" => 401 }.to_json
+      self.body = error_message
+    end
+
+    def call(params)
+      token = params['token']
+      puts "TOKEN: #{token}"
+      result = GrantAccess.new(token).call
+
+      if result.valid
+        update_document(params)
+      else
+        deny_access
       end
     end
 

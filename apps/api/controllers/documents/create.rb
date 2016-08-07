@@ -40,6 +40,26 @@ module Api::Controllers::Documents
   class Create
     include Api::Action
 
+
+    def deny_access
+      error_message = { "error" => "401 Access denied" }.to_json
+      puts "error_message: #{error_message}"
+      self.body = error_message
+    end
+
+    def create_document
+      document = NSDocument.new(params)
+      document.owner_id = result.user_id
+      created_document = DocumentRepository.create document
+      if created_document
+        hash = {'status' => '202', 'document' => created_document.to_hash }
+        puts "Created document with hash = #{hash}"
+        self.body = hash.to_json
+      else
+        self.body = '{ "error" => "500 Server error: document not created" }'
+      end
+    end
+
     def call(params)
       token = params['token']
       puts "TOKEN: #{token}"
@@ -48,20 +68,13 @@ module Api::Controllers::Documents
       puts "result.user_id = #{result.user_id}"
       puts "result.username = #{result.username}"
 
-      if result.valid == false
-        self.body = { "error" => "401 Access denied" }.to_json
-        return
+      if result.valid
+        create_document
+      else
+        deny_access
       end
 
-      document = NSDocument.new(params)
-      document.owner_id = result.user_id
-      created_document = DocumentRepository.create document
-      if created_document
-        hash = {'status' => '202', 'document' => created_document.to_hash }
-        self.body = hash.to_json
-      else
-        self.body = '{ "response" => "500 Server error: document not created" }'
-      end
+
     end
 
 
