@@ -15,6 +15,8 @@ gem 'rack-cors', :require => 'rack/cors'
 gem 'asciidoctor-latex'
 gem 'thread_safe'
 
+gem 'puma'
+
 group :test do
   gem 'minitest'
   gem 'capybara'

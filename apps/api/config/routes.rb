@@ -1,3 +1,4 @@
+get '/test', to: 'test#echo'
 
 
 ### UPLOAD
