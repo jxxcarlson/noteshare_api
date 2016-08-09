@@ -53,8 +53,9 @@ class FindDocuments
   end
 
   def document_hash(document)
+    user = UserRepository.find(document.owner_id)
     { :id => document.id, :title => document.title, :url => "/documents/#{document.id}",
-      :public => document.public, owner_id: document.owner_id }
+      :public => document.public, owner_id: document.owner_id, author: user.username }
   end
 
 
