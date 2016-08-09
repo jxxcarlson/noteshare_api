@@ -8,6 +8,12 @@ module Api::Controllers::Documents
     def call(params)
       puts "Search controller: #{request.query_string}"
       result = FindDocuments.new(request.query_string).call
+      puts "Number of documents: #{result.document_hash_array.count}"
+      puts "Hash array:"
+      result.document_hash_array.each do |item|
+        puts item
+      end
+
       self.body = { :status => 200, :document_count => result.document_count, :documents => result.document_hash_array }.to_json
 
     end
