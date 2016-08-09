@@ -51,6 +51,10 @@ module Api::Controllers::Upload
 
         obj = s3.bucket(bucket).object(params[:filename])
 
+        puts "XXX: content_type::: #{params[:type]}"
+        puts "XXX: filename::: #{params[:filename]}"
+        puts "XXX: owner::: #{params[:owner]}"
+
         psu = obj.presigned_url(:put, :acl => 'public-read',
                                 :metadata => {
                                     'content_type' => params[:type],
