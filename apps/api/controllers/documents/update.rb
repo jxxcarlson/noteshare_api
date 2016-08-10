@@ -29,7 +29,7 @@ module Api::Controllers::Documents
 
      verify(params)
 
-      if @result.valid
+      if @access.valid
         update_document(params)
       else
         deny_access
