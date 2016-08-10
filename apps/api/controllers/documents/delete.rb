@@ -23,7 +23,7 @@ module Api::Controllers::Documents
 
       verify(params)
 
-      if @result.valid
+      if @access.valid
         delete_document(params)
       else
         deny_access

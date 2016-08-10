@@ -17,7 +17,7 @@ require 'hanami/interactor'
 #     tag=physics
 #     user.title=baz.mech  -- return user baz's files which contain 'mech' in the title
 #                          -- search is case insensitive
-#     user.public=baz
+#     user.public=baz      -- return articles that are public or belong to baz
 #
 #
 # scope=all
@@ -42,20 +42,23 @@ class FindDocuments
 
   expose :documents, :document_count, :document_hash_array
 
-  def initialize(query_string)
+  def initialize(query_string, access)
     @query_string = query_string.downcase
+    @access = access
     @documents = []
     @status = 400
   end
 
   def parse
     @queries = @query_string.split('&').map{ |item| item.split('=')}
+    puts "1. @queries: #{@queries}"
   end
 
   def document_hash(document)
-    user = UserRepository.find(document.owner_id)
+    author = UserRepository.find(document.owner_id)
+    author ? author_name = author.username : author_name = '--'
     { :id => document.id, :title => document.title, :url => "/documents/#{document.id}",
-      :public => document.public, owner_id: document.owner_id, author: user.username }
+      :public => document.public, owner_id: document.owner_id, author: author_name }
   end
 
 
@@ -127,11 +130,11 @@ class FindDocuments
   ######## FILTER ########
 
   def user_filter(owner_id)
-    lambda{ |dochash| dochash['owner_id'] == owner_id }
+    lambda{ |dochash| dochash[:owner_id] == owner_id }
   end
 
   def user_or_public_filter(owner_id)
-    lambda{ |dochash| dochash['public'] || (dochash['owner_id'] == owner_id) }
+    lambda{ |dochash| ( (dochash[:public] == true) || (dochash[:owner_id] == owner_id) ) }
   end
 
   def public_filter
@@ -142,24 +145,43 @@ class FindDocuments
     lambda{ |dochash| dochash[:title].downcase =~ /#{arg}/ }
   end
 
+  def user_id(key)
+    if key =~ /[0-9].*/
+      key
+    else
+      user = UserRepository.find_by_username key
+      user.id
+    end
+  end
+
 
   def apply_filter(query, hash_array)
     puts "QUERY: #{query}"
     puts "BEFORE: applying filter #{query} to hash_array (#{hash_array.count})"
+    # puts "HASH ARRAY BEFORE:"
+    # hash_array.each { |item| puts item }
     command, arg = query
+
     case command
-      when 'public'
-        hash_array = hash_array.select(&public_filter)
+      when 'scope'
+        case 'arg'
+          when 'public'
+            puts "APPLYING PUBLIC FILTER"
+            hash_array = hash_array.select(&public_filter)
+          else
+        end
       when 'user'
-        user = UserRepository.find_by_username arg
-        hash_array = hash_array.select(&user_filter(user.id))
+        id = user_id(arg)
+        hash_array = hash_array.select(&user_filter(id))
       when 'user.public'
-        user = UserRepository.find_by_username arg
-        hash_array = hash_array.select(&user_or_public_filter(user.id))
+        id = user_id(arg)
+        hash_array = hash_array.select(&user_or_public_filter(id))
       when 'title'
         hash_array = hash_array.select(&title_filter(arg))
     end
     puts "AFTER: applying filter #{query} to hash_array (#{hash_array.count})"
+    # puts "HASH ARRAY AFTER:"
+    # hash_array.each { |item| puts item }
     hash_array
   end
 
@@ -176,19 +198,33 @@ class FindDocuments
 
   def filter_documents
     set_id_array
-    puts "@id_array = #{@id_array}"
     if @documents.class.name == 'Array'
       @documents = @documents.select{ |doc| @id_array.include?(doc.id) }
     else
       @documents = @documents.all.select{ |doc| @id_array.include?(doc.id) }
     end
-    puts "@documents.count = #{@documents.count}"
+    # puts "@documents.count = #{@documents.count}"
+  end
+
+  def apply_permissions
+    if @access == nil || @access.username == nil
+      @queries << ["scope", "public"]
+    else
+      @queries << ["user.public", @access.username]
+    end
+  end
+
+  def normalize
+
   end
 
   ######## CALL ########
 
   def call
     parse
+    apply_permissions
+    puts "2. @queries: #{@queries}"
+    normalize
     puts "@queries: #{@queries}"
     query = @queries.shift
     search(query)

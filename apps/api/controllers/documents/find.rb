@@ -1,20 +1,37 @@
 
 require_relative '../../../../lib/xdoc/interactors/find_documents'
+require_relative '../../../../lib/xdoc/interactors/grant_access'
+require_relative '../../../../lib/xdoc/modules/verify'
+
+include Permission
 
 module Api::Controllers::Documents
   class Find
     include Api::Action
 
-    def call(params)
+    def search
+
+
+    end
+
+    def call(_params)
+
+      ## Get access token from request headers and compute @access
+      token = request.env["HTTP_ACCESSTOKEN"]
+      @access = GrantAccess.new(token).call
+
       puts "Search controller: #{request.query_string}"
-      result = FindDocuments.new(request.query_string).call
-      puts "Number of documents: #{result.document_hash_array.count}"
-      puts "Hash array:"
-      result.document_hash_array.each do |item|
+
+      search_result = FindDocuments.new(request.query_string, @access).call
+
+      ## LOG FOR DEBUGGING
+      # puts "Number of documents: #{search_result.document_hash_array.count}"
+      # puts "Hash array:"
+      search_result.document_hash_array.each do |item|
         puts item
       end
 
-      self.body = { :status => 200, :document_count => result.document_count, :documents => result.document_hash_array }.to_json
+      self.body = { :status => 200, :document_count => search_result.document_count, :documents => search_result.document_hash_array }.to_json
 
     end
 

@@ -10,7 +10,7 @@ module Permission
 
   def verify(params)
     token = params['token']
-    @result = GrantAccess.new(token).call
+    @access = GrantAccess.new(token).call
   end
 
 end

@@ -27,7 +27,7 @@ module Api::Controllers::Documents
 
       verify(params)
 
-      if @result.valid
+      if @access.valid
         create_document
       else
         deny_access
