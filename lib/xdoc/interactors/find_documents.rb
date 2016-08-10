@@ -55,10 +55,13 @@ class FindDocuments
   end
 
   def document_hash(document)
-    author = UserRepository.find(document.owner_id)
-    author ? author_name = author.username : author_name = '--'
-    { :id => document.id, :title => document.title, :url => "/documents/#{document.id}",
-      :public => document.public, owner_id: document.owner_id, author: author_name }
+    if document
+      author = UserRepository.find(document.owner_id)
+      author ? author_name = author.username : author_name = '--'
+      { :id => document.id, :title => document.title, :url => "/documents/#{document.id}",
+        :public => document.public, owner_id: document.owner_id, author: author_name }
+    end
+
   end
 
 
@@ -161,10 +164,13 @@ class FindDocuments
     # puts "HASH ARRAY BEFORE:"
     # hash_array.each { |item| puts item }
     command, arg = query
+    puts "========================="
+    puts "command: #{command}"
+    puts "arg: #{arg}"
 
     case command
       when 'scope'
-        case 'arg'
+        case arg
           when 'public'
             puts "APPLYING PUBLIC FILTER"
             hash_array = hash_array.select(&public_filter)
@@ -231,9 +237,13 @@ class FindDocuments
     filter_hash_array
     filter_documents
     if @documents == []
+      puts "No documents found"
+      puts "ENV['DEFAULT_DOCUMENT_ID'] = #{ENV['DEFAULT_DOCUMENT_ID']}"
       default_document = DocumentRepository.find(ENV['DEFAULT_DOCUMENT_ID'])
+      puts "default_document: #{default_document.title} (#{default_document.id})"
       @documents = [default_document]
       @document_hash_array = @documents.map { |document| document_hash(document) }
+      puts "After adjustment, @document_hash_array = #{@document_hash_array}"
     end
     @document_count = @documents.count
   end
