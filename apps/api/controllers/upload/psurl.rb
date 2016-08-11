@@ -57,6 +57,7 @@ module Api::Controllers::Upload
         puts "XXX: content_type::: #{params[:type]}"
         puts "XXX: filename::: #{params[:filename]}"
         puts "XXX: owner::: #{params[:owner]}"
+        puts "XXX: title::: #{params[:title]}"
 
         psu = obj.presigned_url(:put, :acl => 'public-read',
                                 :metadata => {
