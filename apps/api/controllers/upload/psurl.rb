@@ -37,6 +37,11 @@ module Api::Controllers::Upload
 
 
     def presigned(params)
+
+      puts "ENTERING CONTROLLER 'PRESIGNED'"
+      puts "PARAMS: #{params.inspect}"
+
+
       if params[:filename] && params[:type]
 
         puts "params[:owner] = #{params[:owner]}"
