@@ -39,8 +39,6 @@ module Api::Controllers::Upload
     def presigned(params)
 
       puts "ENTERING CONTROLLER 'PRESIGNED'"
-      puts "PARAMS: #{params.inspect}"
-
 
       if params[:filename] && params[:type]
 
@@ -67,10 +65,6 @@ module Api::Controllers::Upload
                                     'owner' => params[:owner]
                                 })
         url = URI.parse(psu)
-        puts "================================"
-        puts "CONTENT TYPE: #{params[:type]}"
-        puts "url: #{url}"
-        puts "================================"
         {:url => url}.to_json
       else
         {:error => 'Invalid Params'}.to_json
