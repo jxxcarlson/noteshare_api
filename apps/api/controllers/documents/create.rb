@@ -11,7 +11,7 @@ module Api::Controllers::Documents
 
     def create_document
       document = NSDocument.new(params)
-      document.owner_id = @result.user_id
+      document.owner_id = @access.user_id
       created_document = DocumentRepository.create document
       if created_document
         hash = {'status' => '202', 'document' => created_document.to_hash }

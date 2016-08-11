@@ -14,7 +14,7 @@ module Permission
   end
 
   def error_document_response(kind='default')
-    puts "error_document_reponse: #{kind}"
+    puts "error_document_response: #{kind}"
     default_document = DocumentRepository.find(ENV['DEFAULT_DOCUMENT_ID'])
     {'response' => '202 Accepted', 'document' => default_document.to_hash }
   end
