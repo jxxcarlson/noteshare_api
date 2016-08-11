@@ -3,7 +3,8 @@ module Api::Controllers::Images
     include Api::Action
 
     def image_hash(image)
-      { :id => image.id, :title => image.title, :storage_url => image.url, :url => "/images/#{image.id}" }
+      { :id => image.id, :title => image.title, :storage_url => image.url,
+        :url => "/images/#{image.id}", :content_type => image.content_type }
     end
 
     def call(params)
