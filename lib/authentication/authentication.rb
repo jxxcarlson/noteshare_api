@@ -2,6 +2,11 @@
 # @api auth
 # Authentication base class
 #
+# Based on code by @theCrab
+#
+# See: https://gist.github.com/theCrab/54a339b7a08ddad84e35
+#      https://github.com/theCrab/hanami-fumikiri
+#
 
 module Authentication
   def self.included(base)

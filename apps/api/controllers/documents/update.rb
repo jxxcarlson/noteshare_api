@@ -28,8 +28,6 @@ module Api::Controllers::Documents
     def call(params)
 
      verify(params)
-     verify(params)
-
 
       if @access.valid
         update_document(params)
