@@ -7,7 +7,12 @@ module Api::Controllers::Images
     def call(params)
       puts "API, IMAGE, FIND"
       puts "Search controller: #{request.query_string}"
-      result = FindImages.new(request.query_string).call
+
+      token = request.env["HTTP_ACCESSTOKEN"]
+      @access = GrantAccess.new(token).call
+
+
+      result = FindImages.new(request.query_string, @access).call
       self.body = { :status => 200, :image_count => result.image_count, :images => result.image_hash_array }.to_json
 
     end
