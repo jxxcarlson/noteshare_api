@@ -15,6 +15,7 @@ module Api::Controllers::Documents
     end
 
     def call(_params)
+      puts "API: find"
 
       ## Get access token from request headers and compute @access
       token = request.env["HTTP_ACCESSTOKEN"]

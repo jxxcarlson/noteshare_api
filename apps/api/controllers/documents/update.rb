@@ -8,9 +8,13 @@ module Api::Controllers::Documents
 
     def update_document(params)
       id = params['id']
+      puts " --- id: #{id}"
+      text = params['text']
+      puts " --- text: #{text}"
       document = DocumentRepository.find(id)
 
       if document
+        # puts "\n\n\n\n#{params.inspect}\n\n\n\n"
         document.update_from_hash(params)
         @result = ::RenderAsciidoc.new(source_text: document.text).call
         document.rendered_text = @result.rendered_text
@@ -26,8 +30,8 @@ module Api::Controllers::Documents
     end
 
     def call(params)
-
-     verify(params)
+      puts "API: update"
+      verify_request(request)
 
       if @access.valid
         update_document(params)

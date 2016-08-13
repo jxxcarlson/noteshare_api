@@ -10,6 +10,12 @@ module Permission
 
   def verify(params)
     token = params['token']
+    accesstoken = params['accesstoken']
+    @access = GrantAccess.new(token).call
+  end
+
+  def verify_request(request)
+    token = request.env["HTTP_ACCESSTOKEN"]
     @access = GrantAccess.new(token).call
   end
 

@@ -17,11 +17,15 @@ module Api::Controllers::Documents
     end
 
     def call(params)
+      puts "API: read"
+
       id = params['id']
       document = DocumentRepository.find(id)
 
       token = request.env["HTTP_ACCESSTOKEN"]
+      puts " -- TOKEN: #{token}"
       @access = GrantAccess.new(token).call
+      puts " -- ACCESS: #{@access.inspect}"
 
       if @access.valid
         get_document(document)

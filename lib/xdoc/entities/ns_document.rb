@@ -68,6 +68,8 @@ class NSDocument
 
   def update_from_hash(hash)
 
+    puts "update_from_hash: #{hash.to_s}"
+
     self.title = hash['title'] if hash['title']
     self.short_id = hash['short_id'] if hash['short_id']
     self.owner_id = hash['owner_id'] if hash['owner_id']
