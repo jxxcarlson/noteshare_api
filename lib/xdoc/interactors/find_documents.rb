@@ -111,6 +111,16 @@ class FindDocuments
     puts "@documents.class = #{@documents.class.name}"
   end
 
+  def id_search(arg)
+    puts "id_search iwth argument #{id}"
+    @documents = [DocumentRepository.find(arg)]
+    puts "id_seaerch  result = #{@documents}"
+  end
+
+  def tag_search(arg)
+    @documents = DocumentRepository.find_by_tag(arg)
+  end
+
   def search(query)
     puts "query: #{query}"
     command, arg = query
@@ -125,6 +135,10 @@ class FindDocuments
         user_title_search(arg)
       when 'user.public'
         user_public_search(arg)
+      when 'id'
+        id_search(arg)
+      when 'tag'
+        tag_search(arg)
     end
     @document_hash_array = @documents.map { |document| document_hash(document) }
     puts "After SEARCH, @document_hash_array.count = #{@document_hash_array.count}"
