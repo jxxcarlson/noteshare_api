@@ -9,10 +9,12 @@ module Api::Controllers::Documents
 
     def get_document(document)
       if document
-        hash = {'response' => '202 Accepted', 'document' => document.to_hash }
+        # response.status = 200
+        hash = {'response' => 'success', 'document' => document.to_hash }
         self.body = hash.to_json
       else
-        self.body = '{ "response" => "500 Server error: document not found or processed" }'
+        # response.status = 500
+        self.body = { "error" => "500 Server error: document not found or processed" }.to_json
       end
     end
 

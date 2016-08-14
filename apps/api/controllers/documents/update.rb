@@ -22,10 +22,12 @@ module Api::Controllers::Documents
         document.links['images'] = @result.image_map
         # document.rendered_text = document.rendered_text.gsub('href', 'ng-href')
         DocumentRepository.update document
-        hash = {'status' => '202', 'document' => document.to_hash }
+        # response.status = 200
+        hash = {'status' => 'success', 'document' => document.to_hash }
         self.body = hash.to_json
       else
-        self.body = '{ "response" => "500 Server error: document not updated" }'
+        # response.status = 500
+        self.body = { "error" => "500 Server error: document not updated" }.to_json
       end
     end
 
@@ -36,6 +38,7 @@ module Api::Controllers::Documents
       if @access.valid
         update_document(params)
       else
+        reponse.status = 500
         self.body = error_document_response
       end
     end

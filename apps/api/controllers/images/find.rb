@@ -13,7 +13,8 @@ module Api::Controllers::Images
 
 
       result = FindImages.new(request.query_string, @access).call
-      self.body = { :status => 200, :image_count => result.image_count, :images => result.image_hash_array }.to_json
+      # response.status = 200
+      self.body = { :status => 'success', :image_count => result.image_count, :images => result.image_hash_array }.to_json
 
     end
 

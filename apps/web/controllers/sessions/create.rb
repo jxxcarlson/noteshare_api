@@ -20,8 +20,8 @@ module Web::Controllers::Sessions
 
       options = { iss: 'http://hanamirb.org/', exp: 804700, user_id: user.id, audience: 'github' }
       token = JWT.encode(options, HANAMI_ENV['HMAC_SECRET'], algorithm: 'HS256')
-      response.status = 200
-      response.body = { access_token: token}.to_json
+      # response.status = 200
+      self.body = { status: 'success', access_token: token}.to_json
     end
 
     def authenticate!

@@ -75,6 +75,7 @@ module Api::Controllers::Upload
     def call(params)
       puts "params[:filename]: #{params[:filename]}"
       puts "params[:type]: #{params[:type]}"
+      # response.status = 200
       self.body = presigned(params)
     end
   end

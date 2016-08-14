@@ -14,7 +14,8 @@ module Api::Controllers::Documents
       document.owner_id = @access.user_id
       created_document = DocumentRepository.create document
       if created_document
-        hash = {'status' => '202', 'document' => created_document.to_hash }
+        # response.status = 200
+        hash = {'status' => 'success', 'document' => created_document.to_hash }
         puts "Created document with hash = #{hash}"
         self.body = hash.to_json
       else

@@ -10,7 +10,8 @@ module Api::Controllers::Images
       image = Image.new(url: url, title: params[:title],
                         content_type: params[:content_type],  owner_id: user.id)
       image = ImageRepository.create(image)
-     self.body = { 'title': image.title, 'id': image.id, 'url': image.url, 'content_type': image.content_type}.to_json
+      # response.status = 200
+     self.body = { 'status': 'success', 'title': image.title, 'id': image.id, 'url': image.url, 'content_type': image.content_type}.to_json
     end
   end
 end

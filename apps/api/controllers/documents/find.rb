@@ -33,7 +33,8 @@ module Api::Controllers::Documents
         puts item
       end
 
-      self.body = { :status => 200, :document_count => search_result.document_count, :documents => search_result.document_hash_array }.to_json
+      # response.status = 200
+      self.body = { :status => 'success', :document_count => search_result.document_count, :documents => search_result.document_hash_array }.to_json
 
     end
 

@@ -11,10 +11,12 @@ module Api::Controllers::Images
       id = params['id']
       image = ImageRepository.find(id)
       if image
-        hash = {'response' => '202 Accepted', 'image' => image_hash(image) }
+        # response.status = 200
+        hash = {'response' => 'success', 'image' => image_hash(image) }
         self.body = hash.to_json
       else
-        self.body = '{ "response" => "500 Server error: document not found or processed" }'
+        # response.status = 500
+        self.body = { "error" => "500 Server error: document not found or processed" }.to_json
       end
     end
   end

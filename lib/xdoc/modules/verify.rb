@@ -10,7 +10,6 @@ module Permission
 
   def verify(params)
     token = params['token']
-    accesstoken = params['accesstoken']
     @access = GrantAccess.new(token).call
   end
 
@@ -22,7 +21,7 @@ module Permission
   def error_document_response(kind='default')
     puts "error_document_response: #{kind}"
     default_document = DocumentRepository.find(ENV['DEFAULT_DOCUMENT_ID'])
-    {'response' => '202 Accepted', 'document' => default_document.to_hash }.to_json
+    {'status' => 'success', 'document' => default_document.to_hash }.to_json
   end
 
 
