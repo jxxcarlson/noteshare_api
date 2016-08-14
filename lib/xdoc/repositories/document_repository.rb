@@ -27,6 +27,10 @@ class DocumentRepository
     end
   end
 
+  def self.find_by_tag(tag)
+    self.db.fetch("SELECT id from documents WHERE tags @> '{#{tag}}';").map{ |item| DocumentRepository.find item[:id]}
+  end
+
   def self.fuzzy_find_by_title2(title)
     # query do
     #  where(title: title)
