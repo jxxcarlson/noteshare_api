@@ -46,6 +46,7 @@ Hanami::Model.configure do
 
       attribute :id, Integer
       attribute :short_id, String
+      attribute :author_name, String
       attribute :title, String
 
       attribute :owner_id, Integer

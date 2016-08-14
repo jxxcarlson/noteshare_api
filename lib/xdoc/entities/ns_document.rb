@@ -1,7 +1,7 @@
 class NSDocument
   include Hanami::Entity
 
-  attributes :id, :short_id, :owner_id, :collection_id, :title,
+  attributes :id, :short_id, :owner_id, :author_name, :collection_id, :title,
              :created_at, :updated_at, :viewed_at, :visit_count,
              :text, :rendered_text, :public, :dict, :kind, :links, :tags
 
@@ -64,6 +64,21 @@ class NSDocument
   def update_from_json(str)
     hash = JSON.parse(str)
     self.update_from_hash(hash)
+  end
+
+  ## document API:
+  def hash
+      { :id => self.id,
+        :title => self.title,
+        :url => "/documents/#{self.id}",
+        :owner_id => self.owner_id,
+        :author => self.author_name,
+        :public => self.public,
+        :created_at => self.created_at,
+        :updated_at => self.updated_at,
+        :tags => self.tags,
+        :links => self.links
+      }
   end
 
   def update_from_hash(hash)
