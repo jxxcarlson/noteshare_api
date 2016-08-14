@@ -19,6 +19,7 @@ module Api::Controllers::Documents
 
       ## Get access token from request headers and compute @access
 
+      token = request.env["HTTP_ACCESSTOKEN"]
       @access = GrantAccess.new(token).call
 
       puts "Search controller: #{request.query_string}"
