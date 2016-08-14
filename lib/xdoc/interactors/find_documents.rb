@@ -54,17 +54,6 @@ class FindDocuments
     puts "1. @queries: #{@queries}"
   end
 
-  def document_hash(document)
-    if document
-      author = UserRepository.find(document.owner_id)
-      author ? author_name = author.username : author_name = '--'
-      { :id => document.id, :title => document.title, :url => "/documents/#{document.id}",
-        :public => document.public, owner_id: document.owner_id, author: author_name }
-    end
-
-  end
-
-
   ######## SEARCH ########
 
   def all_documents
@@ -140,7 +129,7 @@ class FindDocuments
       when 'tag'
         tag_search(arg)
     end
-    @document_hash_array = @documents.map { |document| document_hash(document) }
+    @document_hash_array = @documents.map { |document| document.hash }
     puts "After SEARCH, @document_hash_array.count = #{@document_hash_array.count}"
   end
 
@@ -256,7 +245,7 @@ class FindDocuments
       default_document = DocumentRepository.find(ENV['DEFAULT_DOCUMENT_ID'])
       puts "default_document: #{default_document.title} (#{default_document.id})"
       @documents = [default_document]
-      @document_hash_array = @documents.map { |document| document_hash(document) }
+      @document_hash_array = @documents.map { |document| document.hash }
       puts "After adjustment, @document_hash_array = #{@document_hash_array}"
     end
     @document_count = @documents.count
