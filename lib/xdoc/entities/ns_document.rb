@@ -66,18 +66,29 @@ class NSDocument
     self.update_from_hash(hash)
   end
 
+  # Append the hash representation of doc
+  # to the array "documents" of the hash
+  # self.links
+    def append_to_documents_link(doc)
+    doc = DocumentRepository.find doc if doc.class.name == 'Fixnum'
+    self.links ||= {}
+    self.links['documents'] ||= []
+    self.links['documents'] << doc.hash
+  end
+
+
   ## document API:
   def hash
-      { :id => self.id,
-        :title => self.title,
-        :url => "/documents/#{self.id}",
-        :owner_id => self.owner_id,
-        :author => self.author_name,
-        :public => self.public,
-        :created_at => self.created_at,
-        :updated_at => self.updated_at,
-        :tags => self.tags,
-        :links => self.links
+      { 'id': self.id,
+        'title': self.title,
+        'url': "/documents/#{self.id}",
+        'owner_id': self.owner_id,
+        'author': self.author_name,
+        'public': self.public,
+        'created_at': self.created_at,
+        'updated_at':  self.updated_at,
+        'tags': self.tags,
+        'links': self.links
       }
   end
 
