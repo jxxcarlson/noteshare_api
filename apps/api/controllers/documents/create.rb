@@ -20,9 +20,10 @@ module Api::Controllers::Documents
 
       command, arg = query_string.split('=')
       if command == 'append' && arg
+        puts "APPEND TO DOC WITH ID = #{arg}"
         parent_document = DocumentRepository.find arg
         if parent_document
-          parent_document.append_to_documents_link arg
+          parent_document.append_to_documents_link created_document
         end
       end
 
