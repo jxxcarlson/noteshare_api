@@ -183,6 +183,25 @@ class NSDocument
     "#{subdocs.count} => #{subdocs_new.count}"
   end
 
+  def self.move(array, from, to)
+    item = array[from]
+    if from > to
+      array.insert(to, item)
+      array.delete_at(from+1)
+    else
+      array.insert(to+1, item)
+      array.delete_at(from)
+    end
+    array
+  end
+
+  def move_subdocument(from, to)
+    subdocs = self.subdocuments
+    NSDocument.move(subdocs, from, to)
+    self.links['documents'] = subdocs
+    DocumentRepository.update self
+  end
+
 
 
 end
