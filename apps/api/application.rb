@@ -12,7 +12,7 @@ module Api
           origins 'localhost:8081', # express web server
                   # 'localhost:4000',
                   'jxxmbp.local:3000', 'localhost:3000', '127.0.0.1:3000', '0.0.0.0:3000',
-                  'manuscripta.herokuapp.com'# angular clients
+                  'manuscripta.herokuapp.com', 'www.manuscripta.io'# angular clients
                   # '0.0.0.0:3000', # angular client
                   # '127.0.0.1:9000', '127.0.0.1:8081', '127.0.0.1:4000', '0.0.0.0:4000'
           # origins 'localhost:8081', '127.0.0.1:9000', '0.0.0.0:9000'
