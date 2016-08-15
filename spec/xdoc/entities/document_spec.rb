@@ -53,7 +53,7 @@ describe NSDocument do
 
   it 'can update a document from a full or partial json string (2) t5' do
 
-    hash = { 'short_id' => 'foo_1'}
+    hash = { 'identifier' => 'foo_1'}
     hash['owner_id'] = 55
     hash['collection_id'] = 66
     hash['title'] = 'Intro to quantum mechanics'
@@ -79,7 +79,7 @@ describe NSDocument do
 
     @doc.update_from_json(json_str)
 
-    assert @doc.short_id == hash['short_id']
+    assert @doc.identifier == hash['identifier']
     assert @doc.owner_id == hash['owner_id']
     assert @doc.collection_id == hash['collection_id']
 

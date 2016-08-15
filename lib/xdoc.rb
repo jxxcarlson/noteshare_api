@@ -45,7 +45,7 @@ Hanami::Model.configure do
       repository DocumentRepository
 
       attribute :id, Integer
-      attribute :short_id, String
+      attribute :identifier, String
       attribute :author_name, String
       attribute :title, String
 

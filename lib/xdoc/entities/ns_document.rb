@@ -1,7 +1,7 @@
 class NSDocument
   include Hanami::Entity
 
-  attributes :id, :short_id, :owner_id, :author_name, :collection_id, :title,
+  attributes :id, :identifier, :owner_id, :author_name, :collection_id, :title,
              :created_at, :updated_at, :viewed_at, :visit_count,
              :text, :rendered_text, :public, :dict, :kind, :links, :tags
 
@@ -36,7 +36,7 @@ class NSDocument
   def to_hash
     hash = {}
     hash['id'] = self.id
-    hash['short_id'] = self.short_id
+    hash['identifier'] = self.identifier
     hash['collection_id'] = self.collection_id
 
     hash['title'] = self.title
@@ -114,7 +114,7 @@ class NSDocument
     puts "update_from_hash: #{hash.to_s}"
 
     self.title = hash['title'] if hash['title']
-    self.short_id = hash['short_id'] if hash['short_id']
+    self.identifier = hash['identifier'] if hash['identifier']
     self.owner_id = hash['owner_id'] if hash['owner_id']
     self.collection_id = hash['collection_id'] if hash['collection_id']
 

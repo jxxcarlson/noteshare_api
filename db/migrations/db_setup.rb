@@ -23,7 +23,7 @@ Sequel.migration do
 
     create_table(:documents) do
       primary_key :id
-      column :short_id, "text"
+      column :identifier, "text"
       column :title, "text", :null=>false
 
       column :owner_id, "integer"
