@@ -157,7 +157,11 @@ class NSDocument
   ## Handle subdocuments
 
   def subdocuments
-    self.links['documents']
+    self.links['documents'] || []
+  end
+
+  def hasSubdocuments
+    self.subdocuments != []
   end
 
   def update_document_links
