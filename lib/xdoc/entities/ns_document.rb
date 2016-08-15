@@ -74,6 +74,7 @@ class NSDocument
     self.links ||= {}
     self.links['documents'] ||= []
     self.links['documents'] << doc.hash
+    DocumentRepository.update self
   end
 
 
@@ -109,6 +110,21 @@ class NSDocument
     }
   end
 
+  # Does not include text and rendered text
+  def short_hash2
+    { 'id' => self.id,
+      'title' => self.title,
+      'url' => "/documents/#{self.id}",
+      'owner_id' => self.owner_id,
+      'author' => self.author_name,
+      'public' => self.public,
+      'created_at' => self.created_at,
+      'updated_at' =>  self.updated_at,
+      'tags' => self.tags,
+      'links' => self.links
+    }
+  end
+
   def update_from_hash(hash)
 
     puts "update_from_hash: #{hash.to_s}"
@@ -137,6 +153,31 @@ class NSDocument
     DocumentRepository.update  self
   end
 
+
+  ## Handle subdocuments
+
+  def subdocuments
+    self.links['documents']
+  end
+
+  def update_document_links
+    subdocs = self.subdocuments
+    subdocs_new = []
+    subdocs.each do |dochash|
+      valid = true
+      id = dochash[:id] || dochash['id']
+      valid = false if id == nil
+      if valid
+        doc = DocumentRepository.find id
+        valid = false if doc == nil
+      end
+      subdocs_new << doc.short_hash2 if valid
+      puts "#{dochash['id']} (#{valid}): #{dochash['title']}"
+    end
+    self.links['documents'] = subdocs_new
+    DocumentRepository.update self
+    "#{subdocs.count} => #{subdocs_new.count}"
+  end
 
 
 
