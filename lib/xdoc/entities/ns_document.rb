@@ -87,9 +87,26 @@ class NSDocument
         'public': self.public,
         'created_at': self.created_at,
         'updated_at':  self.updated_at,
+        'text': self.text,
+        'rendered_text': self.rendered_text,
         'tags': self.tags,
         'links': self.links
       }
+  end
+
+  # Does not include text and rendered text
+  def short_hash
+    { 'id': self.id,
+      'title': self.title,
+      'url': "/documents/#{self.id}",
+      'owner_id': self.owner_id,
+      'author': self.author_name,
+      'public': self.public,
+      'created_at': self.created_at,
+      'updated_at':  self.updated_at,
+      'tags': self.tags,
+      'links': self.links
+    }
   end
 
   def update_from_hash(hash)

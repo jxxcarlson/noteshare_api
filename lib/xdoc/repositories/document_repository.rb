@@ -9,6 +9,12 @@ class DocumentRepository
     Sequel.connect(ENV['XDOC_DATABASE_URL'])
   end
 
+  def self.find_by_identifier(id)
+    query do
+      where(identifier: id)
+    end.first
+  end
+
   def self.find_public
     query do
       where(public: true)

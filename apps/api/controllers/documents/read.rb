@@ -10,7 +10,7 @@ module Api::Controllers::Documents
     def get_document(document)
       if document
         # response.status = 200
-        hash = {'response' => 'success', 'document' => document.to_hash }
+        hash = {'status' => 'success', 'document' => document.hash }
         self.body = hash.to_json
       else
         # response.status = 500
@@ -19,10 +19,22 @@ module Api::Controllers::Documents
     end
 
     def call(params)
-      puts "API: read"
 
       id = params['id']
-      document = DocumentRepository.find(id)
+      puts "API: read id = #{id}"
+
+
+      if id =~ /\A[1-9][0-9]*\z/
+        puts "  -- FIND numerical id"
+        document = DocumentRepository.find(id)
+      else
+        puts "  -- FIND identifier"
+        document = DocumentRepository.find_by_identifier(id)
+        puts "  -- document:"
+        puts "  -- id: #{document.id}"
+        puts "  -- title: #{document.title}"
+      end
+
 
       token = request.env["HTTP_ACCESSTOKEN"]
       puts " -- TOKEN: #{token}"
