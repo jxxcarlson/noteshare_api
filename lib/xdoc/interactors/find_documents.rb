@@ -101,7 +101,7 @@ class FindDocuments
   end
 
   def id_search(arg)
-    puts "id_search iwth argument #{id}"
+    puts "id_search with argument #{arg}"
     @documents = [DocumentRepository.find(arg)]
     puts "id_seaerch  result = #{@documents}"
   end
