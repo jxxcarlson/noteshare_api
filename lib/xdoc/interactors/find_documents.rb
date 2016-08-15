@@ -103,7 +103,6 @@ class FindDocuments
   def id_search(arg)
     puts "id_search with argument #{arg}"
     @documents = [DocumentRepository.find(arg)]
-    puts "id_seaerch  result = #{@documents}"
   end
 
   def tag_search(arg)
@@ -167,7 +166,6 @@ class FindDocuments
     # puts "HASH ARRAY BEFORE:"
     # hash_array.each { |item| puts item }
     command, arg = query
-    puts "========================="
     puts "command: #{command}"
     puts "arg: #{arg}"
 
@@ -188,7 +186,7 @@ class FindDocuments
       when 'title'
         hash_array = hash_array.select(&title_filter(arg))
     end
-    puts "AFTER: applying filter #{query} to hash_array (#{hash_array.count})"
+    # puts "AFTER: applying filter #{query} to hash_array (#{hash_array.count})"
     # puts "HASH ARRAY AFTER:"
     # hash_array.each { |item| puts item }
     hash_array
@@ -230,6 +228,7 @@ class FindDocuments
   ######## CALL ########
 
   def call
+    puts "************ ENTER FIND DOCUMENTS ************"
     parse
     apply_permissions
     puts "2. @queries: #{@queries}"
@@ -246,9 +245,10 @@ class FindDocuments
       puts "default_document: #{default_document.title} (#{default_document.id})"
       @documents = [default_document]
       @document_hash_array = @documents.map { |document| document.short_hash }
-      puts "After adjustment, @document_hash_array = #{@document_hash_array}"
+      # puts "After adjustment, @document_hash_array = #{@document_hash_array}"
     end
     @document_count = @documents.count
+    puts "************ EXT FIND DOCUMENTS ************"
   end
 end
 

@@ -155,11 +155,10 @@ class FindImages
 
   def apply_filter(query, hash_array)
     puts "QUERY: #{query}"
-    puts "BEFORE: applying filter #{query} to hash_array (#{hash_array.count})"
+    # puts "BEFORE: applying filter #{query} to hash_array (#{hash_array.count})"
     # puts "HASH ARRAY BEFORE:"
     # hash_array.each { |item| puts item }
     command, arg = query
-    puts "========================="
     puts "command: #{command}"
     puts "arg: #{arg}"
 
