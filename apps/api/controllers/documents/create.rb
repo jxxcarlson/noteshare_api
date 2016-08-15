@@ -12,6 +12,7 @@ module Api::Controllers::Documents
     def create_document
       document = NSDocument.new(params)
       document.owner_id = @access.user_id
+      document.author = @access.username
       created_document = DocumentRepository.create document
       if created_document
         # response.status = 200
