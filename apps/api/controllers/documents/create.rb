@@ -10,6 +10,7 @@ module Api::Controllers::Documents
 
 
     def create_document(query_string)
+      puts "***** Create document with query string: #{query_string}"
       document = NSDocument.new(params)
       document.owner_id = @access.user_id
       document.author_name = @access.username
@@ -20,12 +21,9 @@ module Api::Controllers::Documents
       command, arg = query_string.split('=')
       if command == 'append' && arg
         parent_document = DocumentRepository.find arg
-        puts "APPEND TO: #{parent_document.title}"
-        document_list = parent_document.links['documents'] || []
-        puts "Parent document list: #{document_list}"
-        document_list << created_document.short_hash
-        parent_document.links['documents'] = document_list
-        DocumentRepository.update parent_document
+        if parent_document
+          parent_document.append_to_documents_link arg
+        end
       end
 
       if created_document
