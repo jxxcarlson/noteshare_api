@@ -17,7 +17,7 @@ module Api
                   # '127.0.0.1:9000', '127.0.0.1:8081', '127.0.0.1:4000', '0.0.0.0:4000'
           # origins 'localhost:8081', '127.0.0.1:9000', '0.0.0.0:9000'
           # origins '*'
-          resource '*', headers: :any, methods: [:get, :post, :patch, :options]
+          resource '*', headers: :any, methods: [:get, :delete, :post, :patch, :options]
         end
       end
 

@@ -13,7 +13,7 @@ module Api::Controllers::Documents
 
       if document && document.owner_id == @access.user_id
         DocumentRepository.delete document
-        # response.status = 200
+        puts "Document #{id} deleted"
         reply =  { 'status': 'success','info': "document{#id} deleted" }
       else
         # response.status = 500
@@ -24,11 +24,19 @@ module Api::Controllers::Documents
 
     def call(params)
 
-      verify(params)
+      puts "API DELETE"
+      puts " -- token: params["
+
+      verify_request(request)
+
+      puts "-- access username:u #{@access.username}"
+      puts "-- access valid: #{@access.valid}"
 
       if @access.valid
+        puts "Access valid"
         delete_document(params)
       else
+        puts "Access denied"
         self.body = error_document_response
       end
 
