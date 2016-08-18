@@ -37,6 +37,10 @@ class DocumentRepository
     self.db.fetch("SELECT id from documents WHERE tags @> '{#{tag}}';").map{ |item| DocumentRepository.find item[:id]}
   end
 
+  def self.random_sample(percentage)
+    self.db.fetch("SELECT * FROM documents TABLESAMPLE BERNOULLI(#{percentage})").map{ |item| DocumentRepository.find item[:id]}
+  end
+
   def self.fuzzy_find_by_title2(title)
     # query do
     #  where(title: title)

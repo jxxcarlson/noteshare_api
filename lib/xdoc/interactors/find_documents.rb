@@ -109,6 +109,11 @@ class FindDocuments
     @documents = DocumentRepository.find_by_tag(arg)
   end
 
+  def random_search(percentage)
+    puts "*** Random search"
+    @documents = DocumentRepository.random_sample(percentage)[0..3]
+  end
+
   def search(query)
     puts "query: #{query}"
     command, arg = query
@@ -127,6 +132,8 @@ class FindDocuments
         id_search(arg)
       when 'tag'
         tag_search(arg)
+      when 'random'
+        random_search(arg)
     end
     @document_hash_array = @documents.map { |document| document.short_hash }
     puts "After SEARCH, @document_hash_array.count = #{@document_hash_array.count}"
