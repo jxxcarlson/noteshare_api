@@ -1,4 +1,4 @@
-get '/printdocument:/id', to: 'documents#print'
+get '/printdocument/:id', to: 'documents#print'
 get '/test', to: 'test#echo'
 
 
@@ -10,8 +10,6 @@ post '/presigned', to: 'upload#psurl'
 post '/images', to: 'images#create'
 get '/images', to: 'images#find'
 get '/images/:id', to: 'images#get'
-
-
 
 
 ### DOCUMENTS
