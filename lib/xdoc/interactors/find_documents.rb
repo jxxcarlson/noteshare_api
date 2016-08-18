@@ -116,8 +116,8 @@ class FindDocuments
 
   def search(query)
     puts "query: #{query}"
-    command, arg = query
-    case command
+    @command, arg = query
+    case @command
       when 'scope'
         scope_search(arg)
       when 'user'
@@ -196,9 +196,6 @@ class FindDocuments
     puts "AFTER: applying filter #{query} to hash_array (#{hash_array.count})"
     # puts "HASH ARRAY AFTER:"
     # hash_array.each { |item| puts item }
-    if command == 'random'
-      hash_array = hash_array[0..4]
-    end
     hash_array
   end
 
@@ -247,6 +244,9 @@ class FindDocuments
     query = @queries.shift
     search(query)
     filter_hash_array
+    if @command == 'random'
+      @document_hash_array = @document_hash_array[0..4]
+    end
     filter_documents
     if @documents == []
       puts "No documents found"
