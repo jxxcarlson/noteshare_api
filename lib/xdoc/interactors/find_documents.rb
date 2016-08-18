@@ -187,8 +187,8 @@ class FindDocuments
         hash_array = hash_array.select(&title_filter(arg))
     end
     puts "AFTER: applying filter #{query} to hash_array (#{hash_array.count})"
-    puts "HASH ARRAY AFTER:"
-    hash_array.each { |item| puts item }
+    # puts "HASH ARRAY AFTER:"
+    # hash_array.each { |item| puts item }
     hash_array
   end
 
