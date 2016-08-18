@@ -111,7 +111,7 @@ class FindDocuments
 
   def random_search(percentage)
     puts "*** Random search"
-    @documents = DocumentRepository.random_sample(percentage)[0..3]
+    @documents = DocumentRepository.random_sample(percentage)[0..50]
   end
 
   def search(query)
@@ -196,6 +196,9 @@ class FindDocuments
     puts "AFTER: applying filter #{query} to hash_array (#{hash_array.count})"
     # puts "HASH ARRAY AFTER:"
     # hash_array.each { |item| puts item }
+    if command == 'random'
+      hash_array = hash_array[0..4]
+    end
     hash_array
   end
 
