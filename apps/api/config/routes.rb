@@ -1,3 +1,4 @@
+get '/printdocument:/id', to: 'documents#print'
 get '/test', to: 'test#echo'
 
 
