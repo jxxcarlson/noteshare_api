@@ -19,5 +19,8 @@ class ImageRepository
     hits.map{ |item| ImageRepository.find item[:id]}
   end
 
+  def self.random_sample(percentage)
+    self.db.fetch("SELECT * FROM images TABLESAMPLE BERNOULLI(#{percentage})").map{ |item| ImageRepository.find item[:id]}
+  end
 
 end

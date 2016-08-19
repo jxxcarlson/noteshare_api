@@ -106,6 +106,11 @@ class FindImages
     puts "@images.class = #{@images.class.name}"
   end
 
+  def id_search(arg)
+    puts "id_search with argument #{arg}"
+    @documents = [ImageRepository.find(arg)]
+  end
+
   def search(query)
     puts "query: #{query}"
     command, arg = query
@@ -120,6 +125,8 @@ class FindImages
         user_title_search(arg)
       when 'user.public'
         user_public_search(arg)
+      when 'id'
+        id_search(arg)
     end
     @image_hash_array = @images.map { |image| image_hash(image) }
     puts "After SEARCH, @image_hash_array.count = #{@image_hash_array.count}"
