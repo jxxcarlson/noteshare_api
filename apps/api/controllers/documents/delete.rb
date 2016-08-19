@@ -32,7 +32,7 @@ module Api::Controllers::Documents
       puts "-- access username:u #{@access.username}"
       puts "-- access valid: #{@access.valid}"
 
-      if @access.valid
+      if @access.valid  && @access.username == params['author_name']
         puts "Access valid"
         delete_document(params)
       else

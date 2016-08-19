@@ -110,7 +110,7 @@ class NSDocument
     }
   end
 
-  # Does not include text and rendered text
+  # Like above, but a hack to solve the :id vs 'id' problem -- BAAD!
   def short_hash2
     { 'id' => self.id,
       'title' => self.title,
