@@ -7,48 +7,55 @@ class CreateDocument
   include Hanami::Interactor
 
 
+  expose :new_document, :parent_document
+
   def initialize(params, author_id)
+    @params = params
+    @author_id = author_id
     @options = params['options']
-    @current_document_id =params['current_document_id']
-    @parent_document_id = params['parent_document_id']
-    @document = NSDocument.new(params)
-    @author = UserRepository.find author_id
   end
 
   def create
-    @document.owner_id = @author.id
-    @document.author_name = @author.username
-    @document = DocumentRepository.create @document
+    document = NSDocument.new(@params)
+    author = UserRepository.find @author_id
+    document.owner_id = author.id
+    document.author_name = author.username
+    @new_document = DocumentRepository.create document
+    puts "CreateDocument: created #{@new_document.title} (#{@new_document.id})"
   end
 
   def attach
 
     if @options['child'] == true
-      parent_document = DocumentRepository.find @current_document_id
-      if parent_document
-        parent_document.append_to_documents_link @document
+      @parent_document = DocumentRepository.find @params['parent_document_id']
+      if @parent_document
+        @parent_document.append_to_documents_link @new_document
+        DocumentRepository.update @parent_document
+        puts "CreateDocument: attached #{@new_document.title} to #{@parent_document.title}"
+      else
+        'error'
       end
-      DocumentRepository.update parent_document
     end
 
     if (@options['position'] == 'above') || (@options['position'] == 'below')
 
-      parent_document = DocumentRepository.find @parent_document_id
-      current_document = DocumentRepository.find @current_document_id
-      if parent_document == nil or current_document == nil
+      @parent_document = DocumentRepository.find @params['parent_document_id']
+      current_document = DocumentRepository.find @params['current_document_id']
+      if @parent_document == nil or current_document == nil
         return 'error'
       end
 
-      last_index = parent_document.links['documents'].count
-      parent_document.append_to_documents_link @document
-      target_index = parent_document.index_of_subdocument current_document
+      last_index = @parent_document.links['documents'].count
+      @parent_document.append_to_documents_link @new_document
+      puts "CreateDocument: attached #{@new_document.title} to #{@parent_document.title}"
+      target_index = @parent_document.index_of_subdocument current_document
       target_index -= 1 if @options['position'] == 'below'
-      parent_document.move_subdocument(last_index, target_index)
+      @parent_document.move_subdocument(last_index, target_index)
+      puts "CreateDocument: movde #{@new_document.title} to index #{target_index} of #{@parent_document.title}"
 
-      DocumentRepository.update parent_document
+      DocumentRepository.update @parent_document
       return 'success'
     end
-
 
   end
 
