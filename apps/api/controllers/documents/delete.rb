@@ -25,19 +25,20 @@ module Api::Controllers::Documents
     def call(params)
 
       puts "API DELETE"
-      puts " -- token: params["
+      puts " -- params['author_name']: #{params['author_name']}"
 
       verify_request(request)
 
       puts "-- access username:u #{@access.username}"
       puts "-- access valid: #{@access.valid}"
 
+
       if @access.valid  && @access.username == params['author_name']
         puts "Access valid"
         delete_document(params)
       else
         puts "Access denied"
-        self.body = error_document_response
+        self.body = error_document_response('Sorry, you do not have access to that document')
       end
 
     end
