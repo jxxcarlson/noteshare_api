@@ -22,7 +22,14 @@ module Api::Controllers::Documents
       verify(params)
 
       if @access.valid
-        CreateDocument.new(params, @access.user_id).call
+        result = CreateDocument.new(params, @access.user_id).call
+        if result.status == 'success'
+          hash = {'status' => 'success', 'document' => result.new_document.to_hash }
+          puts "Created document with hash = #{hash}"
+          self.body = hash.to_json
+        else
+          self.body = '{ "error" => "500 Server error: document not created" }'
+        end
       else
         deny_access
       end

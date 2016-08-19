@@ -7,7 +7,7 @@ class CreateDocument
   include Hanami::Interactor
 
 
-  expose :new_document, :parent_document
+  expose :new_document, :parent_document, :status
 
   def initialize(params, author_id)
     @params = params
@@ -32,8 +32,9 @@ class CreateDocument
         @parent_document.append_to_documents_link @new_document
         DocumentRepository.update @parent_document
         puts "CreateDocument: attached #{@new_document.title} to #{@parent_document.title}"
+        @status = 'success'
       else
-        'error'
+        @status = 'error'
       end
     end
 
@@ -42,7 +43,7 @@ class CreateDocument
       @parent_document = DocumentRepository.find @params['parent_document_id']
       current_document = DocumentRepository.find @params['current_document_id']
       if @parent_document == nil or current_document == nil
-        return 'error'
+        @status = 'error'
       end
 
       last_index = @parent_document.links['documents'].count
@@ -54,7 +55,7 @@ class CreateDocument
       puts "CreateDocument: movde #{@new_document.title} to index #{target_index} of #{@parent_document.title}"
 
       DocumentRepository.update @parent_document
-      return 'success'
+      @status = 'success'
     end
 
   end
