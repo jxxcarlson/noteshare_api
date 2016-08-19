@@ -108,7 +108,7 @@ class FindImages
 
   def id_search(arg)
     puts "id_search with argument #{arg}"
-    @documents = [ImageRepository.find(arg)]
+    @images = [ImageRepository.find(arg)]
   end
 
   def search(query)
