@@ -232,8 +232,8 @@ class FindImages
     filter_images
     if @images == []
       puts "No images found"
-      puts "ENV['DEFAULT_image_ID'] = #{ENV['DEFAULT_image_ID']}"
-      default_image = ImageRepository.find(ENV['DEFAULT_image_ID'])
+      puts "ENV['DEFAULT_IMAGE_ID'] = #{ENV['DEFAULT_IMAGE_ID']}"
+      default_image = ImageRepository.find(ENV['DEFAULT_IMAGE_ID'])
       puts "default_image: #{default_image.title} (#{default_image.id})"
       @images = [default_image]
       @image_hash_array = @images.map { |image| image_hash(image) }
