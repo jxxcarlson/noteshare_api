@@ -28,13 +28,18 @@ module Api::Controllers::Documents
       puts " -- params['author_name']: #{params['author_name']}"
       puts " -- params['document id']: #{params['id']}"
 
+
+
       verify_request(request)
+
+      document = DocumentRepository.find params['id']
+      author = UserRepository.find_by_username @access.username
 
       puts "-- access username: #{@access.username}"
       puts "-- access valid: #{@access.valid}"
 
 
-      if @access.valid  && @access.username == params['author_name']
+      if @access.valid  && author.id == document.owner_id
         puts "Access valid"
         delete_document(params)
       else
