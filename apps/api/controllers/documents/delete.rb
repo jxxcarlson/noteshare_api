@@ -26,10 +26,11 @@ module Api::Controllers::Documents
 
       puts "API DELETE"
       puts " -- params['author_name']: #{params['author_name']}"
+      puts " -- params['document id']: #{params['id']}"
 
       verify_request(request)
 
-      puts "-- access username:u #{@access.username}"
+      puts "-- access username: #{@access.username}"
       puts "-- access valid: #{@access.valid}"
 
 
