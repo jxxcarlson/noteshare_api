@@ -40,6 +40,11 @@ module Api::Controllers::Documents
 
     def call(params)
 
+      puts "API: new document"
+      puts "options: #{params['options']}"
+      puts "current_document_id: #{params['current_document_id']}"
+      puts "parent_document_id: #{params['parent_document_id']}"
+
       puts "request.query_string: #{request.query_string}"
       query_string =  request.query_string || ""
 

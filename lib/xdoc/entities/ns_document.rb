@@ -202,6 +202,18 @@ class NSDocument
     DocumentRepository.update self
   end
 
+  def index_of_subdocument(subdocument)
+    subdocument_id = subdocument.id
+    idx = -1
+    self.links['documents'].each_with_index do |doc, index|
+      if doc['id'] == subdocument_id
+        idx = index
+        break
+      end
+    end
+    idx
+  end
+
 
 
 end
