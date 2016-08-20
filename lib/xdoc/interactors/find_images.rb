@@ -111,6 +111,11 @@ class FindImages
     @images = [ImageRepository.find(arg)]
   end
 
+  def random_search(percentage)
+    puts "*** Random search"
+    @images = ImageRepository.random_sample(percentage)[0..10]
+  end
+
   def search(query)
     puts "query: #{query}"
     command, arg = query
@@ -125,6 +130,8 @@ class FindImages
         user_title_search(arg)
       when 'user.public'
         user_public_search(arg)
+      when 'random'
+        random_search(arg)
       when 'id'
         id_search(arg)
     end
