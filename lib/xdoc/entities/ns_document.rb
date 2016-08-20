@@ -82,6 +82,7 @@ class NSDocument
   def hash
       { 'id': self.id,
         'title': self.title,
+        'has_subdocuments': self.has_subdocuments,
         'url': "/documents/#{self.id}",
         'owner_id': self.owner_id,
         'author': self.author_name,
@@ -99,6 +100,7 @@ class NSDocument
   def short_hash
     { 'id': self.id,
       'title': self.title,
+      'has_subdocuments': self.has_subdocuments,
       'url': "/documents/#{self.id}",
       'owner_id': self.owner_id,
       'author': self.author_name,
@@ -114,6 +116,7 @@ class NSDocument
   def short_hash2
     { 'id' => self.id,
       'title' => self.title,
+      'has_subdocuments' => self.has_subdocuments,
       'url' => "/documents/#{self.id}",
       'owner_id' => self.owner_id,
       'author' => self.author_name,
@@ -143,8 +146,6 @@ class NSDocument
     self.rendered_text = hash['rendered_text'] if hash['rendered_text']
 
     self.public = hash['public'] if hash['public'] != nil
-    puts "hash['public'] = #{hash['public']}"
-    puts "self.public = #{self.public}"
 
     self.dict = hash['dict'] if hash['dict']
     self.links['documents'] = hash['links']['documents'] if hash['links'] && hash['links']['documents']
@@ -160,7 +161,7 @@ class NSDocument
     self.links['documents'] || []
   end
 
-  def hasSubdocuments
+  def has_subdocuments
     self.subdocuments != []
   end
 
@@ -176,7 +177,6 @@ class NSDocument
         valid = false if doc == nil
       end
       subdocs_new << doc.short_hash2 if valid
-      puts "#{dochash['id']} (#{valid}): #{dochash['title']}"
     end
     self.links['documents'] = subdocs_new
     DocumentRepository.update self

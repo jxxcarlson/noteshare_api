@@ -24,7 +24,7 @@ module Api::Controllers::Documents
         document = DocumentRepository.find_by_identifier(id)
       end
       if document
-        if document.hasSubdocuments
+        if document.has_subdocuments
           document.update_document_links
         end
       end

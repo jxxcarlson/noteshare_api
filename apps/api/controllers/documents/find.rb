@@ -16,28 +16,14 @@ module Api::Controllers::Documents
 
     def call(_params)
       puts "API: find"
-      puts "************ ENTER FIND CONTROLLER ************"
 
       ## Get access token from request headers and compute @access
-
       token = request.env["HTTP_ACCESSTOKEN"]
       @access = GrantAccess.new(token).call
 
-      puts "Search controller: #{request.query_string}"
-
       search_result = FindDocuments.new(request.query_string, @access).call
 
-      ## LOG FOR DEBUGGING
-      # puts "Number of documents: #{search_result.document_hash_array.count}"
-      # puts "Hash array:"
-      # search_result.document_hash_array.each do |item|
-      #   puts item
-      # end
-
-      # response.status = 200
       self.body = { :status => 'success', :document_count => search_result.document_count, :documents => search_result.document_hash_array }.to_json
-
-      puts "************ EXIT FIND CONTROLLER ************"
     end
 
 

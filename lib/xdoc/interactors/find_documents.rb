@@ -51,23 +51,19 @@ class FindDocuments
 
   def parse
     @queries = @query_string.split('&').map{ |item| item.split('=')}
-    puts "1. @queries: #{@queries}"
   end
 
   ######## SEARCH ########
 
   def all_documents
-    puts "Getting all documents ..."
     @documents = DocumentRepository.all
   end
 
   def public_documents
-    puts "Getting public documents ..."
     @documents = DocumentRepository.find_public
   end
 
   def user_search(username)
-    puts "Getting user documents ..."
     user = UserRepository.find_by_username(username)
     @documents = DocumentRepository.find_by_owner(user.id)
   end
@@ -97,11 +93,9 @@ class FindDocuments
 
   def title_search(arg)
     @documents = DocumentRepository.fuzzy_find_by_title(arg)
-    puts "@documents.class = #{@documents.class.name}"
   end
 
   def id_search(arg)
-    puts "id_search with argument #{arg}"
     @documents = [DocumentRepository.find(arg)]
   end
 
@@ -110,12 +104,10 @@ class FindDocuments
   end
 
   def random_search(percentage)
-    puts "*** Random search"
     @documents = DocumentRepository.random_sample(percentage)[0..50]
   end
 
   def search(query)
-    puts "query: #{query}"
     @command, arg = query
     case @command
       when 'scope'
@@ -136,7 +128,6 @@ class FindDocuments
         random_search(arg)
     end
     @document_hash_array = @documents.map { |document| document.short_hash }
-    puts "After SEARCH, @document_hash_array.count = #{@document_hash_array.count}"
   end
 
   ######## FILTER ########
@@ -168,19 +159,14 @@ class FindDocuments
 
 
   def apply_filter(query, hash_array)
-    puts "QUERY: #{query}"
-    puts "BEFORE: applying filter #{query} to hash_array (#{hash_array.count})"
     # puts "HASH ARRAY BEFORE:"
     # hash_array.each { |item| puts item }
     command, arg = query
-    puts "command: #{command}"
-    puts "arg: #{arg}"
 
     case command
       when 'scope'
         case arg
           when 'public'
-            puts "APPLYING PUBLIC FILTER"
             hash_array = hash_array.select(&public_filter)
           else
         end
@@ -193,14 +179,10 @@ class FindDocuments
       when 'title'
         hash_array = hash_array.select(&title_filter(arg))
     end
-    puts "AFTER: applying filter #{query} to hash_array (#{hash_array.count})"
-    # puts "HASH ARRAY AFTER:"
-    # hash_array.each { |item| puts item }
     hash_array
   end
 
   def filter_hash_array
-    puts "FILTER, queries = #{@queries}"
     @queries.each do |query|
       @document_hash_array = apply_filter(query, @document_hash_array)
     end
@@ -217,7 +199,6 @@ class FindDocuments
     else
       @documents = @documents.all.select{ |doc| @id_array.include?(doc.id) }
     end
-    # puts "@documents.count = #{@documents.count}"
   end
 
   def apply_permissions
@@ -235,12 +216,9 @@ class FindDocuments
   ######## CALL ########
 
   def call
-    puts "************ ENTER FIND DOCUMENTS ************"
     parse
     apply_permissions
-    puts "2. @queries: #{@queries}"
     normalize
-    puts "@queries: #{@queries}"
     query = @queries.shift
     search(query)
     filter_hash_array
@@ -249,16 +227,11 @@ class FindDocuments
     end
     filter_documents
     if @documents == []
-      puts "No documents found"
-      puts "ENV['DEFAULT_DOCUMENT_ID'] = #{ENV['DEFAULT_DOCUMENT_ID']}"
       default_document = DocumentRepository.find(ENV['DEFAULT_DOCUMENT_ID'])
-      puts "default_document: #{default_document.title} (#{default_document.id})"
       @documents = [default_document]
       @document_hash_array = @documents.map { |document| document.short_hash }
-      # puts "After adjustment, @document_hash_array = #{@document_hash_array}"
     end
     @document_count = @documents.count
-    puts "************ EXT FIND DOCUMENTS ************"
   end
 end
 
