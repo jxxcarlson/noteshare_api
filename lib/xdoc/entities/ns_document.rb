@@ -202,6 +202,22 @@ class NSDocument
     DocumentRepository.update self
   end
 
+  def move_up(subdocument)
+    k = index_of_subdocument(subdocument)
+    if k > 0
+      self.move_subdocument(k,k-1)
+    end
+  end
+
+
+  def move_down(subdocument)
+    k = index_of_subdocument(subdocument)
+    last_index = self.subdocuments.count - 1
+    if k < last_index
+      self.move_subdocument(k,k+1)
+    end
+  end
+
   def index_of_subdocument(subdocument)
     subdocument_id = subdocument.id
     idx = -1

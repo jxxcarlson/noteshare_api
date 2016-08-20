@@ -1,5 +1,6 @@
 require_relative '../../../../lib/xdoc/interactors/render_asciidoc'
 require_relative '../../../../lib/xdoc/modules/verify'
+require_relative '../../../../lib/xdoc/interactors/update_document'
 
 module Api::Controllers::Documents
   class Update
@@ -8,18 +9,12 @@ module Api::Controllers::Documents
 
     def update_document(params)
       id = params['id']
-      author_name = params['author_name']
-      puts " --- id: #{id}"
-      puts " --- author_name: #{author_name}"
-
       document = DocumentRepository.find(id)
 
       if document
-        #  puts "\n\n\n\n#{params.inspect}\n\n\n\n"
         document.update_from_hash(params)
         @result = ::RenderAsciidoc.new(source_text: document.text).call
         document.rendered_text = @result.rendered_text
-        puts "document.links: #{document.links}"
         document.links['images'] = @result.image_map
         DocumentRepository.update document
         hash = {'status' => 'success', 'document' => document.hash }
@@ -31,11 +26,16 @@ module Api::Controllers::Documents
 
     def call(params)
       puts "API: update"
+
       verify_request(request)
 
-
-      if @access.valid && @access.username == params['author_name']
-        update_document(params)
+      if @access.valid && @access.username == params['author_name'] 
+        result = UpdateDocument.new(params, request.query_string).call
+        if result.status == 'success'
+          self.body = result.hash
+        else
+          self.body = error_document_response('Sorry, something went wroing')
+        end
       else
         self.body = error_document_response('Sorry, you do not have access to that document')
       end
@@ -46,5 +46,6 @@ module Api::Controllers::Documents
     def verify_csrf_token?
       false
     end
+
   end
 end
