@@ -23,7 +23,7 @@ module Api::Controllers::Images
       token = request.env["HTTP_ACCESSTOKEN"]
       @access = GrantAccess.new(token).call
 
-      if @access.valid 
+      if @access.valid
         create_image
       else
         deny_access
