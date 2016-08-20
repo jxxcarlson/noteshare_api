@@ -113,7 +113,7 @@ class FindImages
 
   def random_search(percentage)
     puts "*** Random search"
-    @images = ImageRepository.random_sample(percentage)[0..10]
+    @images = ImageRepository.random_sample(percentage)[0..9]
   end
 
   def search(query)
